@@ -1,0 +1,2294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VeriPura Demo — Supply Chain Flow</title>
+  <style>
+    :root{
+      --bg:#0b0d10;
+      --panel:#11151a;
+      --muted:#1a1f26;
+      --text:#e7edf3;
+      --sub:#a4b0be;
+      --brand:#4ade80;
+      --accent:#60a5fa;
+      --warn:#fbbf24;
+      --danger:#f87171;
+      --ok:#34d399;
+      --chip:#0f1720;
+      --border:#22303d;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      background:var(--bg);
+      color:var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Apple Color Emoji, Segoe UI Emoji;
+    }
+    a{color:var(--accent);text-decoration:none}
+    .hidden{display:none!important}
+    .row{display:flex;gap:.75rem;align-items:center}
+    .col{display:flex;flex-direction:column;gap:.5rem}
+    .btn{
+      background:linear-gradient(180deg,#1b222b,#121820);
+      color:var(--text);
+      border:1px solid var(--border);
+      padding:.55rem .8rem;
+      border-radius:.6rem;
+      cursor:pointer;
+      transition:transform .05s ease,background .2s ease,opacity .2s ease;
+      font-weight:600;
+    }
+    .btn:hover{transform:translateY(-1px)}
+    .btn:disabled{opacity:.55;cursor:not-allowed}
+    .btn-primary{background:linear-gradient(180deg,#1e2732,#15202b);border-color:#294357}
+    .btn-brand{background:linear-gradient(180deg,#21b861,#15924a);border-color:#157a40}
+    .btn-warn{background:#3a2a10;border-color:#5a4217;color:#ffd37a}
+    .btn-danger{background:#3a1214;border-color:#5f1a20;color:#ffb4b7}
+    .chip{
+      display:inline-flex;align-items:center;gap:.4rem;
+      padding:.25rem .5rem;border-radius:999px;
+      background:var(--chip);border:1px solid var(--border);
+      font-size:.75rem;color:var(--sub)
+    }
+    .layout{display:grid;grid-template-columns:260px 1fr;min-height:100vh}
+    .sidebar{
+      background:linear-gradient(180deg,#0e1318,#0b0f13);
+      border-right:1px solid var(--border);padding:1rem;position:sticky;top:0;height:100vh;overflow:auto
+    }
+    .brand{font-weight:800;letter-spacing:.3px}
+    .brand small{display:block;color:var(--sub);font-weight:600}
+    .nav{margin-top:1rem;display:flex;flex-direction:column;gap:.25rem}
+    .nav button{
+      text-align:left;width:100%;
+      background:transparent;border:1px solid transparent;color:var(--text);
+      padding:.55rem .6rem;border-radius:.55rem;cursor:pointer
+    }
+    .nav button.active,.nav button:hover{background:var(--panel);border-color:var(--border)}
+    main{padding:1rem 1.25rem}
+    .card{background:var(--panel);border:1px solid var(--border);border-radius:.9rem;padding:1rem}
+    .grid{display:grid;gap:1rem}
+    .grid.cols-2{grid-template-columns:1fr 1fr}
+    .grid.cols-3{grid-template-columns:repeat(3,1fr)}
+    .grid.cols-4{grid-template-columns:repeat(4,1fr)}
+    .table{width:100%;border-collapse:collapse}
+    .table th,.table td{border-bottom:1px solid var(--border);padding:.5rem .4rem;text-align:left;font-size:.92rem;vertical-align:top}
+    .table th{color:var(--sub);font-weight:700}
+    .table th.sortable{cursor:pointer}
+    .table th.sortable:hover{color:var(--text)}
+    .kbd{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:.85rem;background:#0f1420;border:1px solid #1e2b38;padding:.1rem .35rem;border-radius:.35rem}
+    .input, select, textarea{
+      background:#0c1117;border:1px solid var(--border);color:var(--text);
+      padding:.5rem .55rem;border-radius:.55rem;outline:none
+    }
+    textarea{min-height:90px;resize:vertical}
+    .label{font-size:.85rem;color:var(--sub)}
+    .section-title{font-size:1.1rem;font-weight:800;margin:.25rem 0 .75rem 0}
+    .row-between{display:flex;align-items:center;justify-content:space-between;gap:.75rem}
+    .accordion-item{border:1px solid var(--border);border-radius:.7rem;overflow:hidden;background:#0e1319}
+    .accordion-head{padding:.6rem .8rem;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+    .accordion-body{padding:1rem;border-top:1px solid var(--border);display:none}
+    .tag{font-size:.72rem;padding:.15rem .45rem;border-radius:.4rem;border:1px solid var(--border);background:#0c1318;color:var(--sub)}
+    .tag.ok{color:#9fffc3;border-color:#1d5437;background:#0c1a14}
+    .tag.warn{color:#ffe39a;border-color:#4a3511;background:#1a140c}
+    .tag.block{color:#ffb2b2;border-color:#5a1a1a;background:#1a0c0c}
+    .toast{
+      position:fixed;bottom:18px;right:18px;background:#0f1720;color:#e9f0f6;border:1px solid #1f2b37;
+      padding:.65rem .8rem;border-radius:.6rem;min-width:200px;box-shadow:0 8px 20px rgba(0,0,0,.35);z-index:9999
+    }
+    .toast.ok{border-color:#1d5136}
+    .toast.warn{border-color:#614b17}
+    .toast.err{border-color:#5b1a1a}
+    .muted{color:var(--sub)}
+    .divider{height:1px;background:var(--border);margin:.75rem 0}
+    .pill{padding:.15rem .45rem;border-radius:999px;border:1px solid var(--border);background:#0a1016;color:var(--sub);font-size:.7rem}
+    .right{margin-left:auto}
+    .metric{display:flex;flex-direction:column;gap:.25rem}
+    .metric .h{font-size:.85rem;color:var(--sub)}
+    .metric .v{font-size:1.2rem;font-weight:800}
+    .danger{color:#ffb4b7}
+    .oktext{color:#9fffc3}
+    .warntext{color:#ffe39a}
+    .inline-form{display:flex;gap:.5rem;flex-wrap:wrap;align-items:center}
+    .nowrap{white-space:nowrap}
+    .small{font-size:.85rem}
+    .sr-only{position:absolute!important;height:1px;width:1px;overflow:hidden;clip:rect(1px, 1px, 1px, 1px);white-space:nowrap;border:0;padding:0;margin:-1px}
+
+    /* Admin Tab styles */
+    .admin-tabs{display:flex;gap:.5rem;border-bottom:1px solid var(--border);margin-bottom:1rem;}
+    .admin-tabs button{background:transparent;border:none;padding:.6rem .8rem;cursor:pointer;color:var(--sub);font-weight:600;border-bottom:2px solid transparent}
+    .admin-tabs button.active{color:var(--text);border-bottom-color:var(--brand)}
+    .admin-content{display:none;}
+    .admin-content.active{display:block;}
+
+.btn-ok {
+    background:linear-gradient(180deg,#15a37a,#108e68);
+    border-color:#157a40;
+    color: white;
+}
+.btn-ok:hover {
+  filter: brightness(0.95);
+}
+
+/* Demo instructions styling */
+.demo-instructions {
+  background: linear-gradient(135deg, #1a4b3a, #0f2b23);
+  border: 2px solid var(--brand);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.demo-accounts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.demo-account {
+  background: rgba(255,255,255,0.05);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--border);
+}
+
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Utilities ----------
+  const $ = (sel, root=document) => root.querySelector(sel);
+  const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+  const escapeHTML = (s) => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
+  function toast(msg, kind='ok'){
+    const el = document.createElement('div');
+    el.className = 'toast ' + (kind==='warn'?'warn':kind==='err'?'err':'ok');
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(()=>{ el.remove(); }, 2600);
+  }
+  function save(){ localStorage.setItem('vp', JSON.stringify(state)); }
+  function load(){
+    try{
+      const raw = localStorage.getItem('vp');
+      if(!raw) return null;
+      return JSON.parse(raw);
+    }catch(e){ return null; }
+  }
+  function deepClone(x){ return JSON.parse(JSON.stringify(x)); }
+
+  // ---------- Missing Functions (Fixed) ----------
+  function now() {
+    return new Date().toISOString().slice(0, 16).replace('T', ' ');
+  }
+
+  function shortId(prefix='P') {
+    return prefix + Math.random().toString(36).slice(2, 8).toUpperCase();
+  }
+
+  async function hashDataURL(dataUrl) {
+    try {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(dataUrl);
+      let hash = 0;
+      for (let i = 0; i < data.length; i++) {
+        const char = data[i];
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+      }
+      return Math.abs(hash).toString(16).slice(0, 8);
+    } catch (e) {
+      return Math.random().toString(36).slice(2, 10);
+    }
+  }
+
+  // ---------- Enhanced Demo Seeding ----------
+  const seed = {
+    companies: [
+      {id:'C_IMP', name:'EU Asian Importers', type:'Importer', city:'Amsterdam'},
+      {id:'C_PRO', name:'Bangkok Chili Co., Ltd.', type:'Processor', city:'Bangkok'},
+      {id:'C_COO1', name:'NE Thai Herb Producer', type:'Coop', city:'Udon Thani'},
+      {id:'C_COO2', name:'Central Thai Organic', type:'Coop', city:'Ayutthaya'},
+    ],
+    logisticsProviders: [
+      {id:'LOG_TH1', name:'Thai Express Logistics', region:'Thailand', city:'Bangkok', specialty:'Ground Freight - Regular', services:['domestic_ground','port_transfer']},
+      {id:'LOG_TH2', name:'Bangkok Cold Chain Services', region:'Thailand', city:'Bangkok', specialty:'Ground Freight - Refrigerated', services:['refrigerated_ground','cold_storage']},
+      {id:'LOG_TH3', name:'Siam Ocean Freight Lines', region:'Thailand', city:'Laem Chabang', specialty:'Ocean Freight', services:['ocean_freight','container_shipping']},
+      {id:'LOG_EU1', name:'Rotterdam Port Logistics', region:'EU', city:'Rotterdam', specialty:'Ocean Freight', services:['ocean_freight','port_operations','container_handling']},
+      {id:'LOG_EU2', name:'EuroFreight Solutions', region:'EU', city:'Hamburg', specialty:'Ground Freight - Regular', services:['eu_ground','distribution','warehousing']},
+      {id:'LOG_EU3', name:'Antwerp Cold Storage Transport', region:'EU', city:'Antwerp', specialty:'Ground Freight - Refrigerated', services:['refrigerated_ground','cold_storage','eu_distribution']},
+    ],
+    users: [
+      // IMPORTER USERS (EU Asian Importers)
+      {id:'U001', companyId:'C_IMP', email:'james.anderson@euasian.com', name:'James Anderson', role:'Procurement Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U002', companyId:'C_IMP', email:'maria.schmidt@euasian.com', name:'Maria Schmidt', role:'QA Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U003', companyId:'C_IMP', email:'raj.patel@euasian.com', name:'Raj Patel', role:'Finance/Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U004', companyId:'C_IMP', email:'admin@euasian.com', name:'System Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'Super'},
+      
+      // PROCESSOR USERS (Bangkok Chili Co.)
+      {id:'U006', companyId:'C_PRO', email:'satoshi.tanaka@bkc.co.th', name:'Satoshi Tanaka', role:'Export Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U007', companyId:'C_PRO', email:'anong.wong@bkc.co.th', name:'Anong Wong', role:'Quality Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U008', companyId:'C_PRO', email:'chai.somchai@bkc.co.th', name:'Chai Somchai', role:'Logistics Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U009', companyId:'C_PRO', email:'priya.chen@bkc.co.th', name:'Priya Chen', role:'Finance/Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U010', companyId:'C_PRO', email:'admin@bkc.co.th', name:'Processor Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'Standard'},
+      
+      // COOP USERS (NE Thai Herb Producer)
+      {id:'U012', companyId:'C_COO1', email:'niran.pranee@nethp.co.th', name:'Niran Pranee', role:'Sales Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U013', companyId:'C_COO1', email:'kamala.somsak@nethp.co.th', name:'Kamala Somsak', role:'QA Liaison', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U014', companyId:'C_COO1', email:'fon.bounma@nethp.co.th', name:'Fon Bounma', role:'Finance/Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U015', companyId:'C_COO1', email:'admin@nethp.co.th', name:'Coop Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'Limited'},
+      
+    ],
+    roles: {
+      Importer: ['Procurement Manager','QA Manager','Logistics Manager','Finance/Wallet Admin','Sys Admin'],
+      Processor: ['Export Manager','Sales/Account Manager','Production Manager','Quality Manager','Logistics Manager','Finance/Wallet Admin','Sys Admin'],
+      Coop: ['Sales Manager','QA Liaison','Logistics Coordinator','Finance/Wallet Admin','Sys Admin']
+    },
+    companyDocuments: [
+      {id:'DOC001', companyId:'C_IMP', name:'EORI Registration Certificate', category:'Regulatory', type:'EORI', fileHash:'abc123def456', uploadedBy:'U002', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*730).toISOString(), status:'Valid', tags:['EU-Required', 'Import-Essential']},
+      {id:'DOC002', companyId:'C_PRO', name:'GMP Certificate', category:'Quality & Safety', type:'GMP', fileHash:'m7n8o9p0q1r2', uploadedBy:'U007', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*365).toISOString(), status:'Valid'},
+      {id:'DOC003', companyId:'C_COO1', name:'Organic Certificate', category:'Sustainability', type:'Organic', fileHash:'e5f6g7h8i9j0', uploadedBy:'U013', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*120).toISOString(), status:'Valid'},
+    ],
+    documentCategories: {
+      'Regulatory': ['EORI', 'TRACES', 'Establishment Approval', 'Import License'],
+      'Quality & Safety': ['GMP', 'HACCP', 'ISO9001', 'ISO22000'],
+      'Sustainability': ['Organic', 'FairTrade', 'Global GAP', 'Rainforest Alliance'],
+      'Operational': ['Insurance', 'Bill of Lading', 'Commercial Invoice', 'Certificate of Origin'],
+      'Product-Specific': ['Test Results', 'Specifications', 'Nutritional Analysis', 'Allergen Declaration']
+    },
+    certs: [
+      {companyId:'C_IMP', type:'EORI', expiresAt: new Date(Date.now()+86400000*365).toISOString()},
+      {companyId:'C_PRO', type:'GMP', expiresAt: new Date(Date.now()+86400000*365).toISOString()},
+      {companyId:'C_PRO', type:'HACCP', expiresAt: new Date(Date.now()+86400000*180).toISOString()},
+      {companyId:'C_COO1', type:'Organic', expiresAt: new Date(Date.now()+86400000*120).toISOString()},
+      {companyId:'C_COO1', type:'FairTrade', expiresAt: new Date(Date.now()+86400000*90).toISOString()},
+    ],
+    wallets: [
+      {companyId:'C_IMP', balance:5000, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:5000}]},
+      {companyId:'C_PRO', balance:3500, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:3500}]},
+      {companyId:'C_COO1', balance:2000, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:2000}]},
+      {companyId:'C_COO2', balance:1500, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:1500}]}
+    ],
+    invitations: [
+      // Pre-established partnerships for demo
+    ],
+    partners: [
+      // Pre-established partnerships for demo flow
+      {id:'P1', aId:'C_IMP', bId:'C_PRO', status:'Accepted', directionForA:'Supplier', source:'invitation', createdAt: now()},
+      {id:'P2', aId:'C_PRO', bId:'C_COO1', status:'Accepted', directionForA:'Supplier', source:'invitation', createdAt: now()},
+    ],
+    labels: [],
+    awards: [],
+    walletAuditLog: [],
+    auditLog: [],
+    securityEvents: [],
+    pos: [
+      // DEMO FLOW 1: Importer → Processor → Coop (Tom Yum Paste)
+      { 
+        id:'DEMO001', 
+        buyerId:'C_IMP', 
+        supplierId:'C_PRO', 
+        currency:'EUR', 
+        items:[{name:'Tom Yum Paste 24x200g', qty:1000, price:2.2}], 
+        total:2200, 
+        status:'Open', 
+        labelStatus:'Requested', 
+        rewards:{organic:1200,fairTrade:800}, 
+        docChecklist:[{name:'GMP', state:'Valid'}, {name:'HACCP', state:'Valid'}], 
+        docs:[], 
+        thread:[
+          {author:'C_IMP:Procurement Manager', msg:'🎯 DEMO ORDER: Tom Yum Paste for Q4 launch - high priority', ts:now()},
+          {author:'C_IMP:QA Manager', msg:'Label requested: EU compliant labeling with allergen declaration', ts:now()}
+        ], 
+        shipments:[], 
+        trace:{}, 
+        createdAt: now(),
+        labelHistory: [
+          {id:'LBL_REQ001', action:'requested', actor:'C_IMP:QA Manager', timestamp:now(), version:1, requirements:'EU compliant labeling with allergen declaration'}
+        ]
+      },
+      
+      // Supporting PO: Processor → Coop for raw materials
+      { 
+        id:'DEMO002', 
+        buyerId:'C_PRO', 
+        supplierId:'C_COO1', 
+        currency:'THB', 
+        items:[{name:'Fresh Lemongrass (kg)', qty:200, price:42}, {name:'Thai Chilies (kg)', qty:150, price:85}], 
+        total:21150, 
+        status:'Open', 
+        labelStatus:'Not Required', 
+        rewards:{organic:800,fairTrade:600}, 
+        docChecklist:[{name:'Organic', state:'Valid'}, {name:'FairTrade', state:'Valid'}], 
+        docs:[], 
+        thread:[
+          {author:'C_PRO:Export Manager', msg:'🌶️ DEMO ORDER: Raw materials for Tom Yum production batch DEMO001', ts:now()},
+          {author:'C_COO1:Sales Manager', msg:'Confirmed availability - organic certified stock ready', ts:now()}
+        ], 
+        shipments:[], 
+        trace:{}, 
+        createdAt: now()
+      },
+
+      // DEMO FLOW 2: Complete example showing shipped status
+      { 
+        id:'DEMO003', 
+        buyerId:'C_IMP', 
+        supplierId:'C_PRO', 
+        currency:'EUR', 
+        items:[{name:'Green Curry Paste 18x400g', qty:500, price:3.1}], 
+        total:1550, 
+        status:'Shipped', 
+        labelStatus:'Accepted', 
+        rewards:{organic:900,fairTrade:700}, 
+        docChecklist:[{name:'GMP', state:'Valid'}], 
+        docs:[], 
+        thread:[
+          {author:'C_IMP:Procurement Manager', msg:'✅ COMPLETED DEMO: Green curry approved and shipped', ts:now()},
+          {author:'C_PRO:Logistics Manager', msg:'Shipped via Siam Ocean Freight - Container DEMO12345', ts:now()},
+          {author:'C_IMP:QA Manager', msg:'Label accepted: Meets all EU requirements', ts:now()}
+        ], 
+        shipments:[{
+          id:'S1', 
+          qty:500, 
+          ts:now(), 
+          carrier:'Siam Ocean Freight Lines', 
+          logisticsProvider: 'LOG_TH3', 
+          tracking:'DEMO-TRK-001'
+        }], 
+        trace:{
+          lots:[
+            {id:'L-CURRY-001', qty:300, source:'Premium Spice Farm'},
+            {id:'L-CURRY-002', qty:200, source:'Organic Herb Garden'}
+          ],
+          chain:['Premium Spice Farm','Organic Herb Garden','C_PRO','C_IMP'],
+          geo:'13.76,100.50'
+        }, 
+        createdAt: now(),
+        labelHistory: [
+          {id:'LBL_REQ003', action:'requested', actor:'C_IMP:QA Manager', timestamp:now(), version:1, requirements:'Green curry paste EU labeling'},
+          {id:'LBL_UPL003', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Green_Curry_Label.pdf', fileHash:'gc123456', fileSize:1234567},
+          {id:'LBL_ACC003', action:'accepted', actor:'C_IMP:QA Manager', timestamp:now(), version:3, comments:'Meets all EU requirements'}
+        ]
+      },
+
+      // Supporting completed coop order
+      { 
+        id:'DEMO004', 
+        buyerId:'C_PRO', 
+        supplierId:'C_COO1', 
+        currency:'THB', 
+        items:[{name:'Thai Basil (kg)', qty:100, price:65}], 
+        total:6500, 
+        status:'Completed', 
+        labelStatus:'Not Required', 
+        rewards:{organic:500,fairTrade:300}, 
+        docChecklist:[{name:'Organic', state:'Valid'}], 
+        docs:[], 
+        thread:[
+          {author:'C_PRO:Export Manager', msg:'✅ COMPLETED: Thai basil for green curry batch DEMO003', ts:now()},
+          {author:'C_COO1:Sales Manager', msg:'Delivered fresh - excellent quality', ts:now()}
+        ], 
+        shipments:[{
+          id:'S1', 
+          qty:100, 
+          ts:now(), 
+          received:true, 
+          receivedAt:now(), 
+          completed:true, 
+          completedAt:now(),
+          carrier:'Local Organic Transport',
+          logisticsProvider: 'LOG_TH1'
+        }], 
+        trace:{
+          lots:[{id:'L-BASIL-001', qty:100, source:'Certified Organic Farm'}],
+          chain:['Certified Organic Farm','C_COO1','C_PRO'],
+          geo:'15.87,100.99'
+        }, 
+        createdAt: now()
+      }
+    ]
+  };
+
+  
+let state = load() || seed;
+
+  // ---------- Relationship policy ----------
+  function companyById(id){ return state.companies.find(c=>c.id===id); }
+  function userById(id){ return (state.users || []).find(u=>u.id===id); }
+  function typeOf(id){ const c = companyById(id); return c?c.type:null; }
+  
+  function allowedCounterpartiesFor(companyId){
+    const t = typeOf(companyId);
+    const others = state.companies.filter(c=>c.id!==companyId);
+    if(t==='Importer') return others.filter(c=>c.type==='Processor');
+    if(t==='Processor') return others.filter(c=>c.type==='Importer' || c.type==='Coop');
+    if(t==='Coop') return others.filter(c=>c.type==='Processor');
+    return [];
+  }
+  function isAllowedPair(aId, bId){
+    const at = typeOf(aId), bt = typeOf(bId);
+    if(at==='Importer' && bt==='Processor') return true;
+    if(at==='Processor' && (bt==='Importer' || bt==='Coop')) return true;
+    if(at==='Coop' && bt==='Processor') return true;
+    return false;
+  }
+
+  function getAvailableLogisticsProviders(companyId, shipmentType = 'all') {
+    const myType = typeOf(companyId);
+    if (myType === 'Importer') {
+      return state.logisticsProviders || [];
+    } else if (myType === 'Processor') {
+      return (state.logisticsProviders || []).filter(p => p.region === 'Thailand');
+    } else if (myType === 'Coop') {
+      return (state.logisticsProviders || []).filter(p => p.region === 'Thailand');
+    }
+    return [];
+  }
+  function renderLogisticsProviderDropdown(companyId, selectId = 'logisticsProvider') {
+    const providers = getAvailableLogisticsProviders(companyId);
+    const options = providers.map(p => 
+      `<option value="${p.id}">${escapeHTML(p.name)} - ${escapeHTML(p.specialty)} (${escapeHTML(p.city)})</option>`
+    ).join('');
+    return `<select id="${selectId}" class="input">${options}</select>`;
+  }
+
+  // ---------- Current user session ----------
+  let session = { companyId:null, role:null, userId:null };
+  const app = document.getElementById('app');
+
+  function getCurrentUser(){
+    if(!session.userId) return null;
+    return userById(session.userId);
+  }
+  
+  function getAdminLevel(){
+    const u = getCurrentUser();
+    return u ? u.adminLevel : 'None';
+  }
+  
+  function isAtLeast(level){
+    const myLevel = getAdminLevel();
+    const levels = { 'None':0, 'Limited':1, 'Standard':2, 'Super':3 };
+    return (levels[myLevel] || 0) >= (levels[level] || 0);
+  }
+
+  function addAuditLog(action, details={}){
+    const user = getCurrentUser();
+    state.auditLog.push({
+      ts: now(),
+      actor: user ? `${user.name} (${user.role})` : 'System',
+      actorId: user ? user.id : null,
+      company: session.companyId,
+      action: action,
+      ...details
+    });
+  }
+
+  function renderLogin(){
+    app.innerHTML = `
+      <div style="max-width:1200px;margin:4vh auto;padding:1rem">
+        <div class="demo-instructions">
+          <div class="section-title" style="color:var(--brand);margin-bottom:1rem;">🌟 VeriPura Supply Chain Demo</div>
+          <p>This demo shows a complete EU-ASEAN traceability flow. Three users can log in to see different perspectives of the same supply chain:</p>
+          
+          <div class="demo-accounts">
+            <div class="demo-account">
+              <h4 style="color:var(--brand);margin:0 0 0.5rem 0;">🏢 IMPORTER (EU)</h4>
+              <p class="small"><strong>Company:</strong> EU Asian Importers</p>
+              <p class="small"><strong>User:</strong> James Anderson (Procurement Manager)</p>
+              <p class="small"><strong>Role:</strong> Creates purchase orders, manages suppliers, reviews labels</p>
+              <p class="small"><strong>Demo POs:</strong> DEMO001 (Tom Yum - Active), DEMO003 (Green Curry - Shipped)</p>
+            </div>
+            
+            <div class="demo-account">
+              <h4 style="color:var(--brand);margin:0 0 0.5rem 0;">🏭 PROCESSOR (Thailand)</h4>
+              <p class="small"><strong>Company:</strong> Bangkok Chili Co., Ltd.</p>
+              <p class="small"><strong>User:</strong> Satoshi Tanaka (Export Manager)</p>
+              <p class="small"><strong>Role:</strong> Processes orders from importers, sources from coops, manages production</p>
+              <p class="small"><strong>Demo POs:</strong> Receives DEMO001/003, Sources DEMO002/004</p>
+            </div>
+            
+            <div class="demo-account">
+              <h4 style="color:var(--brand);margin:0 0 0.5rem 0;">🌾 COOP (Thailand)</h4>
+              <p class="small"><strong>Company:</strong> NE Thai Herb Producer</p>
+              <p class="small"><strong>User:</strong> Niran Pranee (Sales Manager)</p>
+              <p class="small"><strong>Role:</strong> Supplies raw materials to processors, manages organic certifications</p>
+              <p class="small"><strong>Demo POs:</strong> DEMO002 (Lemongrass/Chilies), DEMO004 (Thai Basil - Complete)</p>
+            </div>
+          </div>
+          
+          <div style="margin-top:1rem;padding:1rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;">
+            <p class="small muted"><strong>Demo Flow:</strong> Importer (DEMO001: Tom Yum) → Processor (DEMO002: Sources ingredients) → Coop (Supplies raw materials)</p>
+            <p class="small muted"><strong>Password:</strong> Use "123" for all accounts | <strong>Reset:</strong> Click "Reset Demo Data" to restore original state</p>
+          </div>
+        </div>
+        
+        <div class="grid cols-2">
+          <div class="card" style="grid-column:1 / span 1">
+            <div class="brand" style="font-size:1.35rem">VeriPura Login</div>
+            <div class="divider"></div>
+            <div class="col">
+              <label class="label">Company</label>
+              <select id="loginCompany"></select>
+              <label class="label">User</label>
+              <select id="loginUser"></select>
+              <label class="label">Password <span class="muted small">(use "123" for all accounts)</span></label>
+              <input id="loginPwd" class="input" type="password" placeholder="Enter: 123" />
+              <div class="row">
+                <button id="loginBtn" class="btn btn-brand">Sign in</button>
+                <button id="seedReset" class="btn">Reset Demo Data</button>
+              </div>
+            </div>
+          </div>
+          <div class="card" style="grid-column:2 / span 1">
+            <div class="section-title">Demo Features</div>
+            <ul class="small">
+              <li><strong>Purchase Orders:</strong> See the flow from importer → processor → coop</li>
+              <li><strong>Label Management:</strong> Upload, review, and approve product labels</li>
+              <li><strong>Traceability:</strong> Track products from farm to consumer</li>
+              <li><strong>Logistics:</strong> Coordinate shipments with providers</li>
+              <li><strong>Compliance:</strong> Manage certifications and documents</li>
+              <li><strong>VERI Tokens:</strong> Reward system for compliance</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    `;
+    const companySel = $('#loginCompany');
+    state.companies.forEach(c=>{
+      const o = document.createElement('option'); o.value=c.id; o.textContent = `${c.name} — ${c.type}`; companySel.appendChild(o);
+    });
+    function populateUsers(){
+      const companyId = companySel.value;
+      const users = (state.users || []).filter(u=>u.companyId === companyId);
+      const userSel = $('#loginUser'); userSel.innerHTML='';
+      users.forEach(u=>{ const o=document.createElement('option'); o.value=u.id; o.textContent=`${u.name} (${u.role})`; userSel.appendChild(o); });
+    }
+    companySel.addEventListener('change', populateUsers);
+    populateUsers();
+
+    $('#loginBtn').addEventListener('click', ()=>{
+      const userId = $('#loginUser').value;
+      const password = $('#loginPwd').value;
+      const user = userById(userId);
+
+      if(!user){
+        toast('User not found.','err'); return;
+      }
+      if(password !== '123'){
+        toast('Invalid password. Use "123" for all accounts.', 'err');
+        state.securityEvents.push({ts:now(), type:'failed_login', reason:'wrong_password', userId:user.id, email:user.email});
+        save();
+        return;
+      }
+      if(user.status === 'Suspended'){
+        toast('This account is suspended. Please contact an administrator.', 'err');
+        state.securityEvents.push({ts:now(), type:'failed_login', reason:'suspended', userId:user.id, email:user.email});
+        save();
+        return;
+      }
+      
+      session.companyId = user.companyId;
+      session.role = user.role;
+      session.userId = user.id;
+      user.lastLogin = now();
+      saveSession();
+      save(); 
+      renderApp();
+    });
+    $('#seedReset').addEventListener('click', ()=>{
+      localStorage.removeItem('vp'); 
+      state = deepClone(seed);
+      save(); 
+      toast('Demo data reset.');
+      location.reload();
+    });
+  }
+  
+  function ensureSessionCompany(){
+    const me = companyById(session.companyId);
+    if(!me || !getCurrentUser()){
+      console.warn('Invalid session; resetting');
+      session = {companyId:null, role:null, userId:null};
+      saveSession();
+      renderLogin();
+      return null;
+    }
+    return me;
+  }
+
+  function saveSession(){ localStorage.setItem('vp_session', JSON.stringify(session)); }
+  function loadSession(){ try{ const s=JSON.parse(localStorage.getItem('vp_session')); if(s&&s.companyId&&s.role&&s.userId){session=s;} }catch(e){} }
+
+  
+  const MAX_FILE_SIZE = 5 * 1024 * 1024;
+  let isProcessing = false;
+
+  async function processPDFForPO(file, po){
+    if(!file) return toast('Select a PDF first.','warn');
+    if(file.size > MAX_FILE_SIZE){ return toast('File too large (max 5MB)','err'); }
+    if(isProcessing){ return toast('Please wait for current operation to complete','warn'); }
+    isProcessing = true;
+    try{
+      const reader = new FileReader();
+      return await new Promise((resolve,reject)=>{
+        reader.onerror = ()=>{ reject(new Error('File read failed')); };
+        reader.onload = async (e)=>{
+          try{
+            const dataUrl = e.target.result;
+            const hash = await hashDataURL(dataUrl);
+            po.docs = po.docs || [];
+            po.docs.push({name:file.name, dataUrl, hash});
+            po.thread.push({author: session.companyId+':'+session.role, msg:`Attached PDF ${escapeHTML(file.name)} [hash ${hash}]`, ts: now()});
+            resolve(true);
+          }catch(err){ reject(err); }
+        };
+        reader.readAsDataURL(file);
+      });
+    }catch(err){
+      console.error('File processing error', err);
+      toast('File processing failed','err');
+      return false;
+    } finally {
+      isProcessing = false;
+    }
+  }
+
+  function updateState(updateFn){
+    try{ updateFn(); save(); return true; }
+    catch(err){ console.error('State update failed:', err); toast('Operation failed','err'); return false; }
+  }
+
+  function renderApp(){
+    const me = companyById(session.companyId);
+    if(!me) return renderLogin();
+    const currentUser = getCurrentUser();
+    if (!currentUser) return renderLogin();
+    const showAdminTab = session.role === 'Sys Admin';
+
+    app.innerHTML = `
+      <div class="layout">
+        <aside class="sidebar">
+          <div class="brand">VeriPura <small>${escapeHTML(me.name)}</small></div>
+          <div class="divider"></div>
+          <div class="col" style="gap:.5rem">
+            <span class="chip">User: ${escapeHTML(currentUser.name)}</span>
+            <span class="chip">Role: ${escapeHTML(session.role)}</span>
+            <span class="chip" id="walletChip">VERI: ${getBalance(me.id)}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="nav" id="nav">
+            <button data-tab="dashboard" class="active">Dashboard</button>
+            <button data-tab="pos">Purchase Orders</button>
+            <button data-tab="documents">Documents</button>
+            <button data-tab="wallet">Wallet</button>
+            <button data-tab="partners" class="${(session.role==='Logistics Manager'||session.role==='Logistics Coordinator')?'hidden':''}">Business Partners</button>
+            <button data-tab="invitations" class="${canSeeInvitations()? '' : 'hidden'}">Invitations</button>
+            <button data-tab="sysadmin" class="${showAdminTab ? '' : 'hidden'}">Sys Admin</button>
+            <button id="logout" class="btn" style="margin-top:.5rem">Log out</button>
+          </div>
+        </aside>
+        <main>
+          <section id="tab-dashboard"></section>
+          <section id="tab-pos" class="hidden"></section>
+          <section id="tab-documents" class="hidden"></section>
+          <section id="tab-wallet" class="hidden"></section>
+          <section id="tab-partners" class="hidden"></section>
+          <section id="tab-invitations" class="hidden"></section>
+          <section id="tab-sysadmin" class="hidden"></section>
+        </main>
+      </div>
+      <div id="modal" class="hidden"></div>
+    `;
+    $('#logout').addEventListener('click', ()=>{ localStorage.removeItem('vp_session'); session={companyId:null,role:null,userId:null}; renderLogin(); });
+    $$('#nav button[data-tab]').forEach(btn=>{
+      btn.addEventListener('click', (e)=>{
+        $$('#nav button').forEach(b=>b.classList.remove('active'));
+        e.currentTarget.classList.add('active');
+        const tab = e.currentTarget.dataset.tab;
+        ['dashboard','pos','documents','wallet','partners','invitations','sysadmin'].forEach(t=>{
+          const el = document.getElementById('tab-'+t);
+          if(el) el.classList.toggle('hidden', t!==tab);
+        });
+        if(tab==='dashboard') renderDashboard();
+        if(tab==='pos') renderPOs();
+        if(tab==='documents') renderDocuments();
+        if(tab==='wallet') renderWallet();
+        if(tab==='partners') renderPartners();
+        if(tab==='invitations') renderInvitations();
+        if(tab==='sysadmin') renderSysAdmin();
+      });
+    });
+    renderDashboard();
+  }
+
+  function renderDashboard(){
+    const me = companyById(session.companyId);
+    const myPOs = state.pos.filter(p=>p.buyerId===me.id || p.supplierId===me.id);
+    const open = myPOs.filter(p=>p.status==='Open').length;
+    const rts = myPOs.filter(p=>p.status==='ReadyToShip').length;
+    const shipped = myPOs.filter(p=>p.status==='Shipped').length;
+    const received = myPOs.filter(p=>p.status==='Received').length;
+    const completed = myPOs.filter(p=>p.status==='Completed').length;
+    
+    // Demo-specific highlights
+    const demoPOs = myPOs.filter(p => p.id.startsWith('DEMO'));
+    const demoHighlights = demoPOs.map(po => {
+      const buyer = companyById(po.buyerId);
+      const supplier = companyById(po.supplierId);
+      const isMyPO = po.buyerId === me.id ? 'Issued' : 'Received';
+      return `<div class="row" style="gap:.5rem;margin-bottom:.5rem;">
+        <span class="pill">${po.id}</span>
+        <span class="small">${isMyPO}: ${escapeHTML(buyer.name)} → ${escapeHTML(supplier.name)}</span>
+        <span class="tag ${po.status==='Completed'?'ok':po.status==='Shipped'?'ok':po.status==='Open'?'warn':'warn'}">${po.status}</span>
+      </div>`;
+    }).join('');
+    
+    const _me_guard = ensureSessionCompany(); if(!_me_guard) return; $('#tab-dashboard').innerHTML = `
+      <div class="section-title">Dashboard - ${escapeHTML(me.name)} (${escapeHTML(me.type)})</div>
+      <div class="grid cols-3">
+        <div class="card metric"><div class="h">Open POs</div><div class="v">${open}</div></div>
+        <div class="card metric"><div class="h">Ready to Ship</div><div class="v">${rts}</div></div>
+        <div class="card metric"><div class="h">Shipped / Received / Completed</div>
+          <div class="v">${shipped} / ${received} / ${completed}</div>
+        </div>
+      </div>
+      <div class="grid cols-2" style="margin-top:1rem">
+        <div class="card">
+          <div class="row-between"><div class="section-title">Demo Purchase Orders</div></div>
+          <div style="max-height: 300px; overflow-y: auto;">
+            ${demoHighlights || '<div class="muted small">No demo POs visible for your company.</div>'}
+          </div>
+          <div class="divider"></div>
+          <div class="small muted">These are the key demo POs showing the supply chain flow. Check the Purchase Orders tab for full details and actions.</div>
+        </div>
+        <div class="card">
+          <div class="section-title">Your Company</div>
+          <div class="row" style="flex-wrap:wrap">
+            <span class="chip">Type: ${escapeHTML(me.type)}</span>
+            <span class="chip">City: ${escapeHTML(me.city||'-')}</span>
+            <span class="chip">Balance: <strong id="dashBalance">${getBalance(me.id)}</strong> VERI</span>
+          </div>
+          <div class="divider"></div>
+          <div class="small muted">
+            <strong>Demo Instructions:</strong><br>
+            • <strong>Importer:</strong> Review and approve POs, manage labels<br>
+            • <strong>Processor:</strong> Process orders, source materials, coordinate shipments<br>
+            • <strong>Coop:</strong> Supply raw materials, maintain certifications
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  function directionFor(viewerId, otherId){
+    const vt = typeOf(viewerId), ot = typeOf(otherId);
+    if(vt==='Importer' && ot==='Processor') return 'Supplier';
+    if(vt==='Processor' && ot==='Importer') return 'Customer';
+    if(vt==='Processor' && ot==='Coop') return 'Supplier';
+    if(vt==='Coop' && ot==='Processor') return 'Customer';
+    return '—';
+    }
+  function partnerStatus(aId, bId){
+    const edge = state.partners.find(e => (e.aId===aId && e.bId===bId) || (e.aId===bId && e.bId===aId));
+    return edge? edge.status : 'Prospect';
+  }
+  function canInviteFromRole(){
+    const meType = typeOf(session.companyId);
+    const r = session.role;
+    if(meType==='Importer') return r==='Procurement Manager';
+    if(meType==='Processor') return r==='Export Manager' || r==='Sales/Account Manager';
+    if(meType==='Coop') return r==='Sales Manager';
+    return false;
+  }
+  function canSeeInvitations(){
+    const r = session.role;
+    if(r === 'Logistics Manager' || r === 'Logistics Coordinator') return false;
+    return canInviteFromRole();
+  }
+  
+  function wirePartnerDelegatedHandlers(){
+    const container = document.getElementById('tab-partners');
+    if(!container || container.dataset.wired==='1') return;
+    container.dataset.wired='1';
+    container.addEventListener('click',(ev)=>{
+      const btn = ev.target.closest('button');
+      if(!btn) return;
+      if(btn.classList.contains('btn-invite')){
+        const targetId = btn.dataset.id;
+        if(!isAllowedPair(session.companyId,targetId)){ toast('Not a permitted relationship.','err'); return; }
+        if(!canInviteFromRole()){ toast('Your role cannot send invitations.','err'); return; }
+        const inv = {id:'I'+Math.random().toString(36).slice(2,8), fromCompanyId:session.companyId, toCompanyId:targetId, fromType:typeOf(session.companyId), toType:typeOf(targetId), status:'Pending', createdAt: now()};
+        state.invitations.push(inv); save(); toast('Invitation sent.');
+        renderPartners();
+      }
+    });
+  }
+
+  function renderPartners(){
+    wirePartnerDelegatedHandlers();
+    const me = companyById(session.companyId);
+    const others = state.companies.filter(c=>c.id!==me.id);
+    const rows = others.map(o=>{
+      const dir = directionFor(me.id, o.id);
+      const stat = partnerStatus(me.id, o.id);
+      const canInvite = canInviteFromRole() && isAllowedPair(me.id, o.id);
+      const inviteBtn = canInvite ? `<button class="btn btn-primary btn-invite" data-id="${o.id}">Invite</button>` : `<span class="muted small">${isAllowedPair(me.id,o.id)?'No action':'Not permitted'}</span>`;
+      return `<tr>
+        <td>${escapeHTML(o.name)}</td>
+        <td>${escapeHTML(o.type)}</td>
+        <td><span class="tag">${dir}</span></td>
+        <td><span class="tag ${stat==='Accepted'?'ok':stat==='Prospect'?'':'warn'}">${stat}</span></td>
+        <td>${inviteBtn}</td>
+      </tr>`;
+    }).join('');
+    $('#tab-partners').innerHTML = `
+      <div class="row-between">
+        <div class="section-title">Business Partners</div>
+        <label class="small"><input type="checkbox" id="onlyAccepted" /> Show "My Partners" (Accepted)</label>
+      </div>
+      <div class="card">
+        <table class="table" id="partnersTable">
+          <thead><tr><th>Company</th><th>Type</th><th>Direction</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+      </div>
+    `;
+    $('#onlyAccepted').addEventListener('change', (e)=>{
+      const only = e.target.checked;
+      const me = companyById(session.companyId);
+      $$('#partnersTable tbody tr').forEach(tr=>{
+        const name = tr.children[0].textContent;
+        const other = state.companies.find(c=>c.name===name);
+        const stat = partnerStatus(me.id, other.id);
+        tr.style.display = (!only || stat==='Accepted') ? '' : 'none';
+      });
+    });
+    $$('#partnersTable .btn-invite').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const targetId = btn.dataset.id;
+        if(!isAllowedPair(session.companyId,targetId)){ toast('Not a permitted relationship.','err'); return; }
+        if(!canInviteFromRole()){ toast('Your role cannot send invitations.','err'); return; }
+        const inv = {id: 'I'+Math.random().toString(36).slice(2,8), fromCompanyId:session.companyId, fromRole:session.role, toCompanyId:targetId, toType:typeOf(targetId), status:'Pending', createdAt:now()};
+        state.invitations.push(inv); save(); toast('Invitation sent.');
+        renderPartners();
+      });
+    });
+  }
+  
+  function wireInvitationDelegatedHandlers(){
+    const container = document.getElementById('tab-invitations');
+    if(!container || container.dataset.wired==='1') return;
+    container.dataset.wired='1';
+    container.addEventListener('click',(ev)=>{
+      const btn = ev.target.closest('button');
+      if(!btn) return;
+      const id = btn.dataset.id;
+      if(btn.id==='sendInvite'){
+        const toId = ($('#invTarget')||{}).value;
+        if(!toId) return toast('Choose a target company.','warn');
+        if(!isAllowedPair(session.companyId,toId)){ return toast('Not a permitted relationship.','err'); }
+        if(!canInviteFromRole()){ return toast('Your role cannot send invitations.','err'); }
+        const inv = {id:'I'+Math.random().toString(36).slice(2,8), fromCompanyId:session.companyId, toCompanyId:toId, fromType:typeOf(session.companyId), toType:typeOf(toId), status:'Pending', createdAt:now()};
+        state.invitations.push(inv); save(); toast('Invitation sent.'); renderInvitations(); renderPartners();
+        return;
+      }
+      if(btn.classList.contains('btn-accept')){
+        const inv = state.invitations.find(i=>i.id===id); if(!inv) return;
+        inv.status='Accepted'; inv.decidedAt=now();
+        const existing = state.partners.find(e=>(e.aId===inv.fromCompanyId && e.bId===inv.toCompanyId) || (e.aId===inv.toCompanyId && e.bId===inv.fromCompanyId));
+        if(existing){ existing.status='Accepted'; } else { state.partners.push({id:'E'+Math.random().toString(36).slice(2,8), aId:Math.min(inv.fromCompanyId, inv.toCompanyId), bId:Math.max(inv.fromCompanyId, inv.toCompanyId), status:'Accepted', source:'invitation', createdAt: now()}); }
+        save(); toast('Invitation accepted.'); renderInvitations(); renderPartners();
+        return;
+      }
+      if(btn.classList.contains('btn-decline')){
+        const inv = state.invitations.find(i=>i.id===id); if(!inv) return;
+        inv.status='Declined'; inv.decidedAt=now(); save(); toast('Invitation declined.'); renderInvitations();
+      }
+    });
+  }
+
+  function renderInvitations(){
+    wireInvitationDelegatedHandlers();
+    if(!canSeeInvitations()){
+      $('#tab-invitations').innerHTML = `<div class="card">Invitations are not available for your role.</div>`; return;
+    }
+    const me = companyById(session.companyId);
+    const allowedTargets = allowedCounterpartiesFor(me.id);
+    const options = allowedTargets.map(c=>`<option value="${c.id}">${escapeHTML(c.name)} — ${c.type}</option>`).join('');
+    const sent = state.invitations.filter(i=>i.fromCompanyId===me.id);
+    const received = state.invitations.filter(i=>i.toCompanyId===me.id);
+    function inviteRow(i,isSent){
+      const from = companyById(i.fromCompanyId), to = companyById(i.toCompanyId);
+      const statusTag = `<span class="tag ${i.status==='Accepted'?'ok':i.status==='Pending'?'warn':'block'}">${i.status}</span>`;
+      const actions = isSent
+        ? (i.status==='Pending'? `<button class="btn btn-warn btn-cancel" data-id="${i.id}">Cancel</button>` : '—')
+        : (i.status==='Pending'? `<button class="btn btn-brand btn-accept" data-id="${i.id}">Accept</button> <button class="btn btn-danger btn-decline" data-id="${i.id}">Decline</button>` : '—');
+      return `<tr><td>${escapeHTML(from.name)} (${escapeHTML(i.fromRole)})</td><td>→</td><td>${escapeHTML(to.name)} (${escapeHTML(i.toType)})</td><td>${statusTag}</td><td>${actions}</td></tr>`;
+    }
+    $('#tab-invitations').innerHTML = `
+      <div class="section-title">Invitations</div>
+      <div class="card">
+        <div class="row" style="flex-wrap:wrap;gap:.5rem 1rem">
+          <div class="col"><label class="label">To Company</label><select id="invTarget">${options}</select></div>
+          <div class="col"><label class="label">Target Type</label><input class="input" id="invType" class="input" value="${escapeHTML((allowedTargets && allowedTargets.length ? allowedTargets[0].type : ''))}" readonly /></div>
+          <div class="col"><label class="label">From Role</label><input class="input" value="${escapeHTML(session.role)}" readonly /></div>
+          <div class="col" style="align-self:end"><button id="sendInvite" class="btn btn-primary">Send Invitation</button></div>
+        </div>
+      </div>
+      <div class="grid cols-2" style="margin-top:1rem">
+        <div class="card">
+          <div class="section-title">Received</div>
+          <table class="table" id="invReceived"><tbody>${
+            received.map(i=>inviteRow(i,false)).join('')||'<tr><td class="muted">— None —</td></tr>'
+          }</tbody></table>
+        </div>
+        <div class="card">
+          <div class="section-title">Sent</div>
+          <table class="table" id="invSent"><tbody>${
+            sent.map(i=>inviteRow(i,true)).join('')||'<tr><td class="muted">— None —</td></tr>'
+          }</tbody></table>
+        </div>
+      </div>
+    `;
+    $('#invTarget').addEventListener('change', (e)=>{
+      const t = companyById(e.target.value); $('#invType').value = t ? t.type : '';
+    });
+    $('#sendInvite').addEventListener('click', ()=>{
+      const toId = $('#invTarget').value;
+      if(!isAllowedPair(session.companyId, toId)){ toast('Not a permitted relationship.','err'); return; }
+      if(!canInviteFromRole()){ toast('Your role cannot send invitations.','err'); }
+      const inv = {id:'I'+Math.random().toString(36).slice(2,8), fromCompanyId:session.companyId, fromRole:session.role, toCompanyId:toId, toType:typeOf(toId), status:'Pending', createdAt:now()};
+      state.invitations.push(inv); save(); toast('Invitation sent.'); renderInvitations();
+    });
+    $$('#invReceived .btn-accept').forEach(b=>b.addEventListener('click',()=>{
+      const id = b.dataset.id; const inv = state.invitations.find(i=>i.id===id); if(!inv) return;
+      inv.status='Accepted'; inv.decidedAt=now();
+      const existing = state.partners.find(e=>(e.aId===inv.fromCompanyId && e.bId===inv.toCompanyId) || (e.aId===inv.toCompanyId && e.bId===inv.fromCompanyId));
+      if(existing){ existing.status='Accepted'; }
+      else{
+        state.partners.push({id:'E'+Math.random().toString(36).slice(2,8), aId:inv.fromCompanyId, bId:inv.toCompanyId, status:'Accepted', directionForA: directionFor(inv.fromCompanyId, inv.toCompanyId), source:'invitation', createdAt: now()});
+      }
+      save(); toast('Invitation accepted.'); renderInvitations(); renderPartners();
+    }));
+    $$('#invReceived .btn-decline').forEach(b=>b.addEventListener('click',()=>{
+      const id=b.dataset.id; const inv = state.invitations.find(i=>i.id===id); if(!inv) return;
+      inv.status='Declined'; inv.decidedAt=now(); save(); toast('Invitation declined.','warn'); renderInvitations();
+    }));
+    $$('#invSent .btn-cancel').forEach(b=>b.addEventListener('click',()=>{
+      const id=b.dataset.id; const inv=state.invitations.find(i=>i.id===id); if(!inv) return;
+      if(inv.status!=='Pending'){ toast('Only pending invites can be cancelled.','warn'); return; }
+      inv.status='Cancelled'; inv.decidedAt=now(); save(); toast('Invitation cancelled.'); renderInvitations();
+    }));
+  }
+
+  function walletFor(companyId){
+    let w = state.wallets.find(w=>w.companyId===companyId);
+    if(!w){ w={companyId, balance:0, ledger:[]}; state.wallets.push(w); }
+    return w;
+  }
+  function getBalance(companyId){ return walletFor(companyId).balance.toFixed(2); }
+  function updateWalletChip(){
+    $('#walletChip').textContent = 'VERI: ' + getBalance(session.companyId);
+    const db = $('#dashBalance'); if(db) db.textContent = getBalance(session.companyId);
+  }
+  function canWalletAdmin(){ return session.role==='Finance/Wallet Admin'; }
+  function renderWallet(){
+    const me = companyById(session.companyId);
+    const w = walletFor(me.id);
+    const allowed = allowedCounterpartiesFor(me.id);
+    const cpOpts = allowed.map(c=>`<option value="${c.id}">${escapeHTML(c.name)} — ${c.type}</option>`).join('');
+    const readOnly = !canWalletAdmin();
+    $('#tab-wallet').innerHTML = `
+      <div class="row-between">
+        <div class="section-title">Wallet</div>
+        <div class="chip">Balance: <strong>${getBalance(me.id)}</strong> VERI</div>
+      </div>
+      <div class="grid cols-3">
+        <div class="card">
+          <div class="section-title">Buy VERI</div>
+          <div class="col">
+            <label class="label">Amount (fiat → VERI 1:1)</label>
+            <input id="buyAmt" class="input" type="number" step="0.01" min="0" ${readOnly?'disabled':''} />
+            <button id="buyBtn" class="btn btn-brand" ${readOnly?'disabled':''}>Buy</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Send VERI</div>
+          <div class="col">
+            <label class="label">Counterparty</label>
+            <select id="sendTo" ${readOnly?'disabled':''}>${cpOpts}</select>
+            <label class="label">Amount</label>
+            <input id="sendAmt" class="input" type="number" step="0.01" min="0" ${readOnly?'disabled':''} />
+            <label class="label">PO (optional)</label>
+            <input id="sendPO" class="input" placeholder="PO ID" ${readOnly?'disabled':''} />
+            <button id="sendBtn" class="btn btn-primary" ${readOnly?'disabled':''}>Send</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Purchase Services / Discounts</div>
+          <div class="col">
+            <select id="svcItem" ${readOnly?'disabled':''}>
+              <option value="QA bundle|250">QA bundle — 250</option>
+              <option value="Compliance verification|180">Compliance verification — 180</option>
+              <option value="Label review|120">Label review — 120</option>
+              <option value="5% discount|100">5% discount — 100</option>
+            </select>
+            <label class="label">PO (optional)</label>
+            <input id="svcPO" class="input" placeholder="PO ID" ${readOnly?'disabled':''} />
+            <button id="svcBuy" class="btn" ${readOnly?'disabled':''}>Purchase</button>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:1rem">
+        <div class="section-title">Ledger</div>
+        <table class="table">
+          <thead><tr><th>When</th><th>Type</th><th>Detail</th><th>Amount</th></tr></thead>
+          <tbody id="ledgerBody">
+            ${w.ledger.slice().reverse().map(l=>`<tr><td class="small muted">${l.ts}</td><td>${l.kind}</td><td>${escapeHTML(l.detail||'')}</td><td class="${l.amount>=0?'oktext':'danger'}">${l.amount>=0?'+':''}${l.amount.toFixed(2)}</td></tr>`).join('') || '<tr><td class="muted">— No entries —</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+      <div class="small muted ${readOnly?'':'hidden'}" style="margin-top:.5rem">Read-only: only Finance/Wallet Admins can buy/send/purchase.</div>
+    `;
+    if(canWalletAdmin()){
+      $('#buyBtn').addEventListener('click', ()=>{
+        const amt = parseFloat($('#buyAmt').value||'0'); if(!(amt>0)) return toast('Enter a positive amount.','warn');
+        w.balance += amt; w.ledger.push({ts:now(), kind:'Received', detail:'VERI purchase (fiat)', amount:+amt});
+        state.walletAuditLog.push({ts:now(), actor:session.role, company:session.companyId, action:'buy', amount:amt});
+        save(); updateWalletChip(); renderWallet(); toast('Top-up complete.');
+      });
+      $('#sendBtn').addEventListener('click', ()=>{
+        const toId = $('#sendTo').value;
+        if(!isAllowedPair(me.id, toId)) return toast('Not a permitted relationship.','err');
+        const amt = parseFloat($('#sendAmt').value||'0'); if(!(amt>0)) return toast('Enter a positive amount.','warn');
+        if(w.balance < amt) return toast('Insufficient balance.','err');
+        const po = $('#sendPO').value.trim();
+        w.balance -= amt;
+        w.ledger.push({ts:now(), kind:'Spent', detail:`Transfer to ${companyById(toId).name}${po?` (PO ${escapeHTML(po)})`:''}`, amount:-amt});
+        const rw = walletFor(toId);
+        rw.balance += amt;
+        rw.ledger.push({ts:now(), kind:'Earned', detail:`Transfer from ${me.name}${po?` (PO ${escapeHTML(po)})`:''}`, amount:+amt});
+        state.walletAuditLog.push({ts:now(), actor:session.role, company:session.companyId, action:'send', to:toId, amount:amt, po});
+        save(); updateWalletChip(); renderWallet(); toast('Transfer sent.');
+      });
+      $('#svcBuy').addEventListener('click', ()=>{
+        const val = $('#svcItem').value; const [item, priceStr] = val.split('|'); const price = parseFloat(priceStr||'0');
+        if(walletFor(me.id).balance < price) return toast('Insufficient balance.','err');
+        const po = $('#svcPO').value.trim();
+        w.balance -= price;
+        w.ledger.push({ts:now(), kind:'Spent', detail:`Service purchase — ${item}${po?` (PO ${escapeHTML(po)})`:''}`, amount:-price});
+        state.walletAuditLog.push({ts:now(), actor:session.role, company:session.companyId, action:'purchase', item, price, po});
+        save(); updateWalletChip(); renderWallet(); toast('Service purchased.');
+      });
+    }
+  }
+
+  
+  function validatePOData(items, currency){
+    if(!items || !items.length) throw new Error('At least one item required');
+    items.forEach((it, idx)=>{
+      if(!it.name || !it.name.trim()) throw new Error(`Item ${idx+1}: name required`);
+      if(Number(it.qty) <= 0) throw new Error(`Item ${idx+1}: quantity must be positive`);
+      if(Number(it.price) < 0) throw new Error(`Item ${idx+1}: price cannot be negative`);
+    });
+    return true;
+  }
+
+  function visiblePOsFor(companyId){
+    return state.pos.filter(p=>p.buyerId===companyId || p.supplierId===companyId);
+  }
+  function roleCanSendPO(){
+    const t = typeOf(session.companyId);
+    if(t==='Importer' && session.role==='Procurement Manager') return true;
+    if(t==='Processor' && (session.role==='Sales/Account Manager' || session.role==='Procurement Manager' || session.role==='Export Manager')) return true;
+    if(t==='Coop' && session.role==='Sales Manager') return true;
+    return false;
+  }
+  function roleCanApprove(po){
+    const meType = typeOf(session.companyId);
+    if(po.buyerId===session.companyId){
+      if(meType==='Importer' && session.role==='Procurement Manager') return true;
+      if(meType==='Processor' && (session.role==='Sales/Account Manager' || session.role==='Export Manager')) return true;
+      if(meType==='Coop' && session.role==='Sales Manager') return true;
+    }
+    return false;
+  }
+  function roleCanRequestQA(){
+    const t = typeOf(session.companyId);
+    return (t==='Importer' && session.role==='QA Manager') || (t==='Processor' && session.role==='Quality Manager');
+  }
+  function roleCanRecordQA(){
+    const t = typeOf(session.companyId);
+    return (t==='Processor' && session.role==='Quality Manager') || (t==='Coop' && session.role==='QA Liaison');
+  }
+  function roleCanAddShipment(po){
+    const meType = typeOf(session.companyId);
+    if(po.supplierId===session.companyId){
+      if(meType==='Processor' && (session.role==='Logistics Manager' || session.role==='Production Manager' || session.role==='Export Manager')) return true;
+      if(meType==='Coop' && (session.role==='Sales Manager' || session.role==='Logistics Coordinator')) return true;
+    }
+    if(po.buyerId===session.companyId){
+      if(meType==='Importer' && session.role==='Logistics Manager') return true;
+      if(meType==='Processor' && session.role==='Logistics Manager') return true;
+    }
+    return false;
+  }
+  
+  function shouldShowLogisticsCoordination(po) {
+    if(session.role === 'Logistics Manager' || session.role === 'Logistics Coordinator') {
+      return po.buyerId === session.companyId || po.supplierId === session.companyId;
+    }
+    return roleCanAddShipment(po);
+  }
+
+  function wirePOCardActions(){
+    const container = document.getElementById('tab-pos');
+    if(!container) return;
+
+    container.addEventListener('click', (ev) => {
+      const btn = ev.target.closest('button');
+      if(!btn) return;
+      
+      const id = btn.dataset.id;
+      if(!id) return;
+
+      const po = state.pos.find(p=>p.id===id);
+      if(!po) return;
+
+      const cl = btn.classList;
+      if(cl.contains('btn-post')){
+        const inp = document.getElementById('msg-'+id);
+        const msg = (inp && inp.value || '').trim();
+        if(!msg) return;
+        po.thread.push({author: session.companyId+':'+session.role, msg: escapeHTML(msg), ts: now()});
+        if(inp) inp.value='';
+        save(); renderPOs();
+        return;
+      }
+      if(cl.contains('btn-label-accept')){
+        po.labelStatus='Accepted'; 
+        po.thread.push({author: session.companyId+':'+session.role, msg: 'Label accepted by QA team', ts: now()});
+        save(); toast('Label accepted.');
+        renderPOs();
+        return;
+      }
+      if(cl.contains('btn-label-upload')){
+        const input = document.getElementById('label-file-'+id);
+        const file = input && input.files && input.files[0];
+        if(!file) return toast('Select a file first.','warn');
+        processPDFForPO(file, po).then((success) => {
+          if(success) {
+            po.labelStatus = 'Pending Review';
+            po.thread.push({author: session.companyId+':'+session.role, msg: `Label uploaded: ${escapeHTML(file.name)}`, ts: now()});
+            if (!po.labelHistory) po.labelHistory = [];
+            po.labelHistory.push({
+              id: 'LBL_UPL' + Date.now(),
+              action: 'uploaded',
+              actor: session.companyId + ':' + session.role,
+              timestamp: now(),
+              version: po.labelHistory.length + 1,
+              fileName: file.name
+            });
+            save();
+            renderPOs();
+          }
+        });
+        return;
+      }
+      if(cl.contains('btn-approve')){
+        if(!roleCanApprove(po)) return;
+        po.status='Approved'; 
+        po.thread.push({author: session.companyId+':'+session.role, msg: 'Purchase order approved', ts: now()});
+        save(); toast('PO approved.');
+        renderPOs();
+        return;
+      }
+      if(cl.contains('btn-ship')){
+        if(po.labelStatus!=='Accepted' && po.labelStatus!=='Not Required') return toast('Blocking: Label not accepted. Use Override + note to proceed.','err');
+        const qty = po.items.reduce((a,it)=>a+Number(it.qty||0),0);
+        const logisticsProvider = $(`#logistics-${id}`)?.value;
+        const carrier = $(`#carrier-${id}`)?.value || 'TBD';
+        const tracking = $(`#tracking-${id}`)?.value || '';
+        const provider = state.logisticsProviders?.find(p => p.id === logisticsProvider);
+        const providerName = provider ? provider.name : 'Not specified';
+        const shipment = {
+          id: 'S'+(po.shipments.length+1), 
+          qty, 
+          ts: now(),
+          logisticsProvider: logisticsProvider,
+          logisticsProviderName: providerName,
+          carrier: carrier,
+          tracking: tracking
+        };
+        po.shipments = po.shipments || []; 
+        po.shipments.push(shipment);
+        if(po.status==='Open' || po.status==='Approved') po.status='ReadyToShip';
+        const logisticsMsg = `Shipment created: ${qty} units via ${escapeHTML(providerName)} (${escapeHTML(carrier)})${tracking ? `, Tracking: ${escapeHTML(tracking)}` : ''}`;
+        po.thread.push({author: session.companyId+':'+session.role, msg: logisticsMsg, ts: now()});
+        save(); 
+        toast('Shipment with logistics coordination added.'); 
+        renderPOs();
+        return;
+      }
+      if(cl.contains('btn-override')){
+        const note = prompt('Override requires a note. Explain why you proceed without Label: Accepted.');
+        if(!note || !note.trim()) return toast('Override cancelled (note required).','warn');
+        if(roleCanAddShipment(po)){
+          const qty = po.items.reduce((a,it)=>a+Number(it.qty||0),0);
+          po.shipments = po.shipments||[]; po.shipments.push({id:'S'+(po.shipments.length+1), qty, ts:now()});
+          if(po.status==='Open' || po.status==='Approved') po.status='ReadyToShip';
+          addAuditLog('po_override', { poId: po.id, alertCode:'LABEL_NOT_ACCEPTED', overrideNote: escapeHTML(note)});
+          po.thread.push({author: session.companyId+':'+session.role, msg:`Shipment added without label (note: ${escapeHTML(note)})`, ts: now()});
+        }else if(roleCanApprove(po)){
+          const before = po.status;
+          po.status='Approved';
+          addAuditLog('po_override', { poId: po.id, alertCode:'LABEL_NOT_ACCEPTED', overrideNote: escapeHTML(note)});
+          po.thread.push({author: session.companyId+':'+session.role, msg:`Approved without label (note: ${escapeHTML(note)})`, ts: now()});
+        }
+        save(); toast('Override recorded.');
+        renderPOs();
+        return;
+      }
+      if(cl.contains('btn-attach')){
+        const input = document.getElementById('file-'+id);
+        const file = input && input.files && input.files[0];
+        if(!file) return toast('Select a PDF first.','warn');
+        processPDFForPO(file, po).then(() => renderPOs());
+      }
+    });
+  }
+
+
+  function renderPOs(){
+    const me = companyById(session.companyId);
+    const myPOs = visiblePOsFor(me.id);
+    const canSend = roleCanSendPO();
+    const posReceived = myPOs.filter(p => p.supplierId === me.id);
+    const posIssued = myPOs.filter(p => p.buyerId === me.id);
+    
+    // Sort by demo POs first, then by creation date
+    const sortPOs = (pos) => pos.sort((a, b) => {
+      if (a.id.startsWith('DEMO') && !b.id.startsWith('DEMO')) return -1;
+      if (!a.id.startsWith('DEMO') && b.id.startsWith('DEMO')) return 1;
+      return (b.createdAt || '').localeCompare(a.createdAt || '');
+    });
+    
+    $('#tab-pos').innerHTML = `
+      <div class="row-between">
+        <div class="section-title">Purchase Orders</div>
+        <button id="btnNewPO" class="btn btn-brand ${canSend?'':'hidden'}">Send New PO</button>
+      </div>
+      <div class="grid cols-1" style="gap:1.5rem;">
+        ${posReceived.length > 0 ? `
+          <div>
+            <div class="row-between" style="margin-bottom:.75rem;">
+              <h3 style="color:var(--text);margin:0;">POs Received (${posReceived.length})</h3>
+              <span class="muted small">Orders from customers to us</span>
+            </div>
+            <div class="col" id="posReceivedList">
+              ${sortPOs(posReceived).map(poCard).join('')}
+            </div>
+          </div>
+        ` : ''}
+        ${posIssued.length > 0 ? `
+          <div>
+            <div class="row-between" style="margin-bottom:.75rem;">
+              <h3 style="color:var(--text);margin:0;">POs Issued (${posIssued.length})</h3>
+              <span class="muted small">Orders from us to suppliers</span>
+            </div>
+            <div class="col" id="posIssuedList">
+              ${sortPOs(posIssued).map(poCard).join('')}
+            </div>
+          </div>
+        ` : ''}
+        ${posReceived.length === 0 && posIssued.length === 0 ? `
+          <div class="card muted">No POs yet.</div>
+        ` : ''}
+      </div>
+    `;
+    $$('#posReceivedList .accordion-head, #posIssuedList .accordion-head').forEach(h=>h.addEventListener('click',()=>{
+      const body = h.nextElementSibling; 
+      body.style.display = body.style.display==='block' ? 'none' : 'block';
+    }));
+    wirePOCardActions();
+    if(canSend){
+      $('#btnNewPO').addEventListener('click', openNewPOModal);
+    }
+  }
+
+  function poCard(p){
+    const buyer = companyById(p.buyerId), supplier = companyById(p.supplierId);
+    const alerts = [];
+    if(p.labelStatus!=='Accepted' && p.labelStatus!=='Not Required') alerts.push(`<span class="tag block">Label: ${p.labelStatus}</span>`);
+    if(p.rewards && (p.rewards.organic || p.rewards.fairTrade || p.rewards.rainforest)) alerts.push('<span class="tag warn">Compliance awards pending</span>');
+    const gmp = state.certs.find(c=>c.companyId===p.supplierId && c.type==='GMP');
+    if(!gmp) alerts.push('<span class="tag warn">Processor GMP missing/expired</span>');
+    else{
+      const daysLeft = (new Date(gmp.expiresAt) - Date.now()) / 86400000;
+      if(daysLeft<=0) alerts.push('<span class="tag warn">Processor GMP expired</span>');
+      else if(daysLeft<30) alerts.push('<span class="tag warn">Processor GMP expiring soon</span>');
+    }
+    const traceVisible = ['ReadyToShip','Shipped','Received','Completed'].includes(p.status);
+    const logisticsDropdown = roleCanAddShipment(p) ? renderLogisticsProviderDropdown(session.companyId, `logistics-${p.id}`) : '';
+    
+    // Demo indicator
+    const demoFlag = p.id.startsWith('DEMO') ? '<span class="tag ok" style="background:var(--brand);color:white;">DEMO</span>' : '';
+    
+    return `
+      <div class="accordion-item">
+        <div class="accordion-head">
+          <div class="row" style="gap:.75rem">
+            <span class="pill">${escapeHTML(p.id)}</span>
+            ${demoFlag}
+            <strong>${escapeHTML(buyer.name)} → ${escapeHTML(supplier.name)}</strong>
+            <span class="muted small">Status: ${escapeHTML(p.status)}</span>
+            <span class="small">Label: <span class="tag ${p.labelStatus==='Accepted'?'ok':p.labelStatus==='Pending Review'?'warn':p.labelStatus==='Requested'?'warn':p.labelStatus==='Not Required'?'ok':'block'}">${p.labelStatus}</span></span>
+            <span class="small">Total: <strong>${p.total.toFixed(2)} ${escapeHTML(p.currency)}</strong></span>
+            <span class="row" style="gap:.35rem">${alerts.join(' ')}</span>
+          </div>
+          <div>▼</div>
+        </div>
+        <div class="accordion-body">
+          <div class="grid cols-2">
+            <div class="col">
+              <div class="section-title">Thread</div>
+              <div class="card" id="thread-${p.id}" style="max-height:200px;overflow-y:auto;">${p.thread.map(t=>`<div class="row" style="gap:.5rem;margin-bottom:.5rem;"><span class="pill">${escapeHTML(t.author)}</span><span class="small">${escapeHTML(t.msg)}</span><span class="muted small right">${t.ts}</span></div>`).join('')}</div>
+              <div class="inline-form" style="margin-top:.5rem">
+                <input class="input" id="msg-${p.id}" placeholder="Add message..." />
+                <button class="btn btn-primary btn-post" data-id="${p.id}">Post</button>
+              </div>
+              <div class="divider"></div>
+              <div class="section-title">QA & Label Management</div>
+              <div class="col" style="gap:.5rem;">
+                ${roleCanRequestQA() && p.labelStatus === 'Requested' ? `
+                  <button class="btn btn-ok btn-label-accept" data-id="${p.id}">✅ Mark Label Accepted</button>
+                ` : ''}
+                ${roleCanRecordQA() && (p.labelStatus === 'Requested' || p.labelStatus === 'Rejected') ? `
+                  <div class="inline-form">
+                    <input class="input" type="file" id="label-file-${p.id}" accept="application/pdf" />
+                    <button class="btn btn-primary btn-label-upload" data-id="${p.id}">Upload Label</button>
+                  </div>
+                ` : ''}
+                ${p.labelStatus === 'Pending Review' ? `
+                  <div class="small muted">Label uploaded, awaiting QA review...</div>
+                ` : ''}
+                <span class="muted small">Label Status: <strong>${p.labelStatus}</strong></span>
+              </div>
+            </div>
+            <div class="col">
+                <div class="section-title">Actions</div>
+                <div class="row" style="flex-wrap:wrap;gap:.5rem">
+                  <button class="btn btn-brand btn-approve ${roleCanApprove(p)?'':'hidden'}" data-id="${p.id}">Approve</button>
+                  <button class="btn btn-primary btn-ship ${roleCanAddShipment(p)?'':'hidden'}" data-id="${p.id}">Add Shipment</button>
+                  <button class="btn btn-warn btn-override ${roleCanApprove(p)||roleCanAddShipment(p)?'':'hidden'}" data-id="${p.id}">Override (with note)</button>
+                </div>
+                ${shouldShowLogisticsCoordination(p) ? `
+                  <div class="divider"></div>
+                  <div class="section-title">🚛 Logistics Coordination</div>
+                  <div class="card" style="background:#0a1016;border:1px solid #1a4b3a;">
+                    <div class="col">
+                      <label class="label">Logistics Provider</label>
+                      ${logisticsDropdown}
+                      <label class="label">Carrier/Transport Mode</label>
+                      <input class="input" id="carrier-${p.id}" placeholder="e.g., Truck #TH-1234, Container MSKU-12345" />
+                      <label class="label">Tracking Reference</label>
+                      <input class="input" id="tracking-${p.id}" placeholder="Optional tracking number" />
+                      <div class="small muted" style="margin-top:.5rem;">
+                        ${getAvailableLogisticsProviders(session.companyId).length} providers available for ${typeOf(session.companyId)}
+                      </div>
+                    </div>
+                  </div>` : ''}
+              <div class="divider"></div>
+              <div class="section-title">Documents</div>
+              <div id="doclist-${p.id}" class="card small">${(p.attachedDocs || []).map(d=>`<div>${escapeHTML(d.name)} <span class="muted">[Attached at ${d.attachedAt}]</span></div>`).join('')||'<div class="muted">— No documents attached —</div>'}</div>
+              <div class="inline-form" style="margin-top:.5rem">
+                <input class="input" type="file" id="file-${p.id}" accept="application/pdf" />
+                <button class="btn btn-primary btn-attach" data-id="${p.id}">Attach PDF</button>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="section-title">Traceability & Shipments</div>
+          <div id="trace-${p.id}" class="card small">${traceVisible ? renderTrace(p) : '<span class="muted">Traceability appears when status is ReadyToShip / Shipped / Received / Completed.</span>'}</div>
+        </div>
+      </div>
+    `;
+  }
+  function renderTrace(p){
+    let html = '';
+    if(p.trace && Object.keys(p.trace).length > 0) {
+      const t = p.trace;
+      const lots = (t.lots||[]).map(l=>`<span class="pill">${escapeHTML(l.id)}: ${l.qty}</span>`).join(' ');
+      const chain = (t.chain||[]).join(' → ');
+      html += `<div class="col">
+        <div><strong>Supply Chain:</strong> ${escapeHTML(chain||'—')}</div>
+        <div><strong>Lot Traceability:</strong> ${lots||'—'}</div>
+        <div><strong>Geographic Origin:</strong> ${escapeHTML(t.geo||'—')}</div>
+      </div>`;
+    }
+    if(p.shipments && p.shipments.length > 0) {
+      html += '<div class="divider"></div><div class="section-title small">Logistics & Shipments</div><div class="col">';
+      p.shipments.forEach((s, idx) => {
+        const logisticsInfo = s.logisticsProviderName ? `via <strong>${escapeHTML(s.logisticsProviderName)}</strong>` : '';
+        const carrierInfo = s.carrier ? `Carrier: <span class="kbd">${escapeHTML(s.carrier)}</span>` : '';
+        const trackingInfo = s.tracking ? `Tracking: <span class="kbd">${escapeHTML(s.tracking)}</span>` : '';
+        
+        const details = [carrierInfo, trackingInfo].filter(Boolean).join(' | ');
+        
+        html += `<div class="small">
+          <strong>Shipment ${idx + 1}:</strong> ${s.qty} units ${logisticsInfo}
+          ${details ? `<br><span class="muted">${details}</span>` : ''}
+        </div>`;
+      });
+      html += '</div>';
+    }
+    return html || '<span class="muted">— No trace or shipment data —</span>';
+  }
+
+  function openNewPOModal(){
+    const me = companyById(session.companyId);
+    const targets = allowedCounterpartiesFor(me.id);
+    const targetOpts = targets.map(c=>`<option value="${c.id}">${escapeHTML(c.name)} — ${c.type}</option>`).join('');
+    const modal = $('#modal');
+    modal.classList.remove('hidden');
+    modal.innerHTML = `
+      <div class="card" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:999">
+        <div class="card" style="max-width:860px;width:95%;max-height:88vh;overflow:auto;background:#0d1217">
+          <div class="row-between">
+            <div class="section-title">Send New PO</div>
+            <button id="xModal" class="btn">Close</button>
+          </div>
+          <div class="grid cols-2">
+            <div class="col">
+              <label class="label">Supplier</label>
+              <select id="poSupplier">${targetOpts}</select>
+              <label class="label">Currency</label>
+              <select id="poCur"><option>EUR</option><option>USD</option><option>THB</option></select>
+              <div class="divider"></div>
+              <div class="section-title">Items</div>
+              <table class="table" id="poItems">
+                <thead><tr><th>Item</th><th>Qty</th><th>Unit Price</th><th>Total</th><th></th></tr></thead>
+                <tbody></tbody>
+              </table>
+              <button id="addRow" class="btn btn-primary">Add Row</button>
+              <div class="row right"><div class="chip">Grand Total: <strong id="grandTotal">0.00</strong></div></div>
+            </div>
+            <div class="col">
+              <label class="label">Attach PO PDF (optional)</label>
+              <input id="poFile" class="input" type="file" accept="application/pdf" />
+              <label class="label">Initial message</label>
+              <input id="poMsg" class="input" placeholder="Kickoff note..." />
+              <div class="divider"></div>
+              <div class="section-title">Compliance rewards (VERI)</div>
+              <div class="grid cols-3">
+                <div><label class="label small">Organic</label><input id="rwOrg" class="input" type="number" step="1" value="1000" /></div>
+                <div><label class="label small">Fair Trade</label><input id="rwFair" class="input" type="number" step="1" value="1000" /></div>
+                <div><label class="label small">Rainforest</label><input id="rwRain" class="input" type="number" step="1" value="1000" /></div>
+              </div>
+              <div class="divider"></div>
+              <div class="section-title">Doc requests</div>
+              <div id="docBadges" class="row" style="flex-wrap:wrap;gap:.5rem"></div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row-between">
+            <span class="muted small">Notes: inputs sanitized; file hashed for tamper detection.</span>
+            <button id="createPO" class="btn btn-brand">Create PO</button>
+          </div>
+        </div>
+      </div>
+    `;
+    $('#xModal').addEventListener('click', ()=>{ modal.classList.add('hidden'); modal.innerHTML=''; });
+    const tbody = $('#poItems tbody');
+    function addRow(item='', qty=0, price=0){
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input class="input it-name" value="${escapeHTML(item)}" /></td>
+        <td><input class="input it-qty" type="number" step="0.01" value="${qty}"/></td>
+        <td><input class="input it-price" type="number" step="0.01" value="${price}"/></td>
+        <td class="it-total">0.00</td>
+        <td><button class="btn btn-danger btn-del">×</button></td>
+      `;
+      tbody.appendChild(tr);
+      recalc();
+      tr.querySelectorAll('input').forEach(inp=>inp.addEventListener('input', recalc));
+      tr.querySelector('.btn-del').addEventListener('click', ()=>{ tr.remove(); recalc(); });
+    }
+    function recalc(){
+      let total = 0;
+      $$('#poItems tbody tr').forEach(tr=>{
+        const q = parseFloat(tr.querySelector('.it-qty').value||'0');
+        const pr = parseFloat(tr.querySelector('.it-price').value||'0');
+        const tt = (q*pr)||0;
+        total += tt;
+        tr.querySelector('.it-total').textContent = tt.toFixed(2);
+      });
+      $('#grandTotal').textContent = total.toFixed(2);
+    }
+    $('#addRow').addEventListener('click', ()=> addRow());
+    addRow('',1,1);
+
+    function renderDocBadges(){
+      const supId = $('#poSupplier').value;
+      const out = [];
+      const needed = ['GMP','Organic','FairTrade'];
+      needed.forEach(t=>{
+        const c = state.certs.find(c=>c.companyId===supId && c.type===t);
+        if(!c){ out.push(`<span class="tag warn">${t}: Missing</span>`); return; }
+        const daysLeft = (new Date(c.expiresAt) - Date.now())/86400000;
+        if(daysLeft<=0) out.push(`<span class="tag warn">${t}: Expired</span>`);
+        else if(daysLeft<30) out.push(`<span class="tag warn">${t}: Expiring soon</span>`);
+        else out.push(`<span class="tag ok">${t}: Valid</span>`);
+      });
+      $('#docBadges').innerHTML = out.join(' ');
+    }
+    $('#poSupplier').addEventListener('change', renderDocBadges);
+    renderDocBadges();
+
+    $('#createPO').addEventListener('click', async ()=>{
+      const supplierId = $('#poSupplier').value;
+      if(!supplierId){ toast('Select a supplier.', 'warn'); return; }
+      const items = $$('#poItems tbody tr').map(tr=>{
+        return {
+          name: escapeHTML(tr.querySelector('.it-name').value||''),
+          qty: parseFloat(tr.querySelector('.it-qty').value||'0'),
+          price: parseFloat(tr.querySelector('.it-price').value||'0')
+        };
+      }).filter(it=>it.name && it.qty>0 && it.price>=0);
+      if(items.length===0){ toast('Add at least one item.','warn'); return; }
+      const currency = $('#poCur').value;
+      const rewards = {organic: +$('#rwOrg').value||0, fairTrade:+$('#rwFair').value||0, rainforest:+$('#rwRain').value||0};
+      const total = items.reduce((a,it)=>a+(it.qty*it.price),0);
+      const id = shortId();
+      const msg = $('#poMsg').value.trim();
+      const po = {
+        id, buyerId: session.companyId, supplierId, currency, items, total, status:'Open', labelStatus:'Requested',
+        rewards, docChecklist:[], docs:[], thread:[], shipments:[], trace:{}, createdAt: now()
+      };
+      if(msg) po.thread.push({author: session.companyId+':'+session.role, msg: escapeHTML(msg), ts: now()});
+      save();
+      const file = $('#poFile').files[0];
+      if(file){
+        const reader=new FileReader();
+        reader.onload = async (e)=>{
+          try{
+            const dataUrl = e.target.result; const hash = await hashDataURL(dataUrl);
+            po.docs.push({name:file.name, dataUrl, hash});
+            finalize();
+          } catch(err){ console.error('File read/hash error', err); toast('File processing failed','err'); }
+        };
+        reader.readAsDataURL(file);
+      }else finalize();
+      function finalize(){
+        state.pos.push(po); save(); toast('PO created.'); $('#modal').classList.add('hidden'); $('#modal').innerHTML=''; renderPOs();
+      }
+    });
+  }
+
+  function wireSysAdminHandlers(){
+    const container = document.getElementById('tab-sysadmin');
+    if(!container || container.dataset.wired === '1') return;
+    container.dataset.wired = '1';
+    container.addEventListener('click', (ev) => {
+        const target = ev.target;
+        if(target.matches('.admin-tabs button')){
+            $$('.admin-tabs button').forEach(b => b.classList.remove('active'));
+            target.classList.add('active');
+            $$('.admin-content').forEach(c => c.classList.remove('active'));
+            const tabId = target.dataset.tab;
+            $('#' + tabId).classList.add('active');
+        }
+        if(target.matches('#addUserBtn')){
+          if(!isAtLeast('Standard')){ toast('Standard Admin permission required.', 'err'); return; }
+          openUserModal();
+        }
+        if(target.matches('.btn-edit-user')){
+          if(!isAtLeast('Standard')){ toast('Standard Admin permission required.', 'err'); return; }
+          const userId = target.dataset.id;
+          const targetUser = userById(userId);
+          if(!targetUser || targetUser.companyId !== session.companyId) {
+            toast('Cannot edit users from other companies.', 'err'); 
+             return;
+          }
+          openUserModal(userId);
+        }
+        if(target.matches('.btn-toggle-status')){
+          if(!isAtLeast('Limited')){ toast('Limited Admin permission required.', 'err'); return; }
+          const userId = target.dataset.id;
+          const user = userById(userId);
+          if(!user || user.companyId !== session.companyId) {
+            toast('Cannot modify users from other companies.', 'err'); 
+             return;
+          }
+          const oldStatus = user.status;
+          const newStatus = oldStatus === 'Active' ? 'Suspended' : 'Active';
+          user.status = newStatus;
+          addAuditLog('user_status_change', { targetUserId: user.id, targetUserEmail: user.email, from: oldStatus, to: newStatus });
+          save();
+          toast(`User ${newStatus.toLowerCase()}.`);
+          renderSysAdminUsers(); 
+         }
+        if(target.matches('#exportAuditBtn')){
+          const companyAuditLog = state.auditLog.concat(state.walletAuditLog).filter(log => log.company === session.companyId);
+          exportToCSV(companyAuditLog, 'veripura_company_audit_log.csv');
+        }
+        if(target.matches('#exportSecurityBtn')){
+          const companySecurityEvents = state.securityEvents.filter(log => {
+            const user = userById(log.userId);
+            return user && user.companyId === session.companyId;
+          });
+          exportToCSV(companySecurityEvents, 'veripura_company_security_log.csv');
+        }
+    });
+    container.addEventListener('input', (ev) => {
+      if(ev.target.matches('#userSearch, #userStatusFilter, #userRoleFilter')){
+        renderSysAdminUsers();
+      }
+    });
+  }
+
+  function renderSysAdmin(){
+    if(session.role !== 'Sys Admin'){
+        $('#tab-sysadmin').innerHTML = `<div class="card">Access denied.</div>`;
+        return;
+    }
+    wireSysAdminHandlers();
+    
+    const users = state.users || [];
+    const companyUsers = users.filter(u => u.companyId === session.companyId);
+    const metrics = {
+        users: companyUsers.length,
+        active: companyUsers.filter(u=>u.status==='Active').length,
+        suspended: companyUsers.filter(u=>u.status==='Suspended').length,
+        pos: state.pos.filter(p => p.buyerId === session.companyId || p.supplierId === session.companyId).length,
+        partners: state.partners.filter(p => p.aId === session.companyId || p.bId === session.companyId).length
+    };
+    $('#tab-sysadmin').innerHTML = `
+      <div class="admin-tabs">
+          <button data-tab="admin-overview" class="active">Overview</button>
+          <button data-tab="admin-users">User Management</button>
+          <button data-tab="admin-security">Security Center</button>
+          <button data-tab="admin-interface">Interface Management</button>
+          <button data-tab="admin-audit">Audit & Compliance</button>
+      </div>
+      <div id="admin-overview" class="admin-content active">
+          <div class="section-title">System Health Dashboard</div>
+          <div class="grid cols-4">
+              <div class="card metric"><div class="h">Company Users</div><div class="v">${metrics.users}</div></div>
+              <div class="card metric"><div class="h">Active Users</div><div class="v oktext">${metrics.active}</div></div>
+              <div class="card metric"><div class="h">Suspended</div><div class="v warntext">${metrics.suspended}</div></div>
+              <div class="card metric"><div class="h">Company POs</div><div class="v">${metrics.pos}</div></div>
+          </div>
+          <div class="card" style="margin-top:1rem;">
+              <div class="section-title">Recent Admin Actions</div>
+              <table class="table small">
+                <thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Detail</th></tr></thead>
+                <tbody>${state.auditLog.filter(a => a.company === session.companyId).slice().reverse().slice(0,5).map(a => `
+                  <tr>
+                    <td>${a.ts}</td>
+                    <td>${escapeHTML(a.actor)}</td>
+                    <td>${escapeHTML(a.action)}</td>
+                    <td>${escapeHTML( (a.targetUserEmail || '') + (a.poId? 'PO '+a.poId:'') )}</td>
+                  </tr>`).join('') || '<tr><td colspan="4" class="muted">No admin actions recorded.</td></tr>'}
+                </tbody>
+              </table>
+          </div>
+      </div>
+      <div id="admin-users" class="admin-content">
+      </div>
+      <div id="admin-security" class="admin-content">
+        <div class="section-title">Security Center</div>
+        <div class="card">
+          <p>Password policies, MFA management, and security event monitoring would be configured here in a production system.</p>
+          <p class="muted small">This is a placeholder for the demo.</p>
+        </div>
+      </div>
+      <div id="admin-interface" class="admin-content">
+        <div class="section-title">Interface Management</div>
+        <div class="card">
+          <p>API keys, webhooks, and other system integration settings would be managed here.</p>
+          <p class="muted small">This is a placeholder for the demo.</p>
+        </div>
+      </div>
+      <div id="admin-audit" class="admin-content">
+        <div class="grid cols-2">
+          <div class="card">
+            <div class="row-between">
+              <div class="section-title">Company Audit Log</div>
+              <button id="exportAuditBtn" class="btn">Export CSV</button>
+            </div>
+            <div style="max-height: 400px; overflow-y: auto;">
+            <table class="table small">
+              <thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Detail</th></tr></thead>
+              <tbody>${state.auditLog.concat(state.walletAuditLog).filter(log => log.company === session.companyId).sort((a,b)=>b.ts.localeCompare(a.ts)).map(log => `
+                <tr>
+                  <td>${escapeHTML(log.ts)}</td>
+                  <td>${escapeHTML(log.actor || log.company)}</td>
+                  <td>${escapeHTML(log.action)}</td>
+                  <td>${escapeHTML(JSON.stringify(log.changes || log.detail || log.targetUserEmail || log.poId || ''))}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="row-between">
+              <div class="section-title">Security Events Log</div>
+              <button id="exportSecurityBtn" class="btn">Export CSV</button>
+            </div>
+            <div style="max-height: 400px; overflow-y: auto;">
+            <table class="table small">
+              <thead><tr><th>When</th><th>Type</th><th>Reason</th><th>User</th></tr></thead>
+              <tbody>${(state.securityEvents || []).filter(log => {
+                const user = userById(log.userId);
+                return user && user.companyId === session.companyId;
+              }).sort((a,b)=>b.ts.localeCompare(a.ts)).map(log => `
+                <tr>
+                  <td>${escapeHTML(log.ts)}</td>
+                  <td>${escapeHTML(log.type)}</td>
+                  <td>${escapeHTML(log.reason)}</td>
+                  <td>${escapeHTML(log.email)}</td>
+                </tr>`).join('')}
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    renderSysAdminUsers();
+  }
+
+  function renderSysAdminUsers() {
+    const container = $('#admin-users');
+    if(!container) return;
+    const searchTerm = ($('#userSearch')?.value || '').toLowerCase();
+    const statusFilter = $('#userStatusFilter')?.value || 'all';
+    const roleFilter = $('#userRoleFilter')?.value || 'all';
+    
+    let filteredUsers = (state.users || []).filter(u => {
+      const sameCompany = u.companyId === session.companyId;
+      const matchesSearch = u.name.toLowerCase().includes(searchTerm) || u.email.toLowerCase().includes(searchTerm);
+      const matchesStatus = statusFilter === 'all' || u.status === statusFilter;
+      const matchesRole = roleFilter === 'all' || u.role === roleFilter;
+      return sameCompany && matchesSearch && matchesStatus && matchesRole;
+    });
+    
+    const companyUsers = (state.users || []).filter(u => u.companyId === session.companyId);
+    const allRoles = [...new Set(companyUsers.map(u => u.role))];
+    container.innerHTML = `
+      <div class="row-between">
+          <div class="section-title">User Management</div>
+          <button id="addUserBtn" class="btn btn-brand">Add New User</button>
+      </div>
+      <div class="card">
+          <div class="inline-form" style="padding-bottom:1rem; border-bottom:1px solid var(--border); margin-bottom:1rem;">
+              <input id="userSearch" class="input" placeholder="Search by name or email..." />
+              <select id="userStatusFilter" class="input">
+                  <option value="all">All Statuses</option>
+                  <option value="Active">Active</option>
+                  <option value="Suspended">Suspended</option>
+              </select>
+              <select id="userRoleFilter" class="input">
+                  <option value="all">All Roles</option>
+                  ${allRoles.map(r => `<option value="${r}">${r}</option>`).join('')}
+              </select>
+          </div>
+          <table class="table">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>MFA</th><th>Admin Level</th><th>Actions</th></tr></thead>
+              <tbody>${filteredUsers.map(u => `
+                  <tr>
+                      <td>${escapeHTML(u.name)}</td>
+                      <td>${escapeHTML(u.email)}</td>
+                      <td>${escapeHTML(u.role)}</td>
+                      <td><span class="tag ${u.status==='Active' ? 'ok' : 'warn'}">${u.status}</span></td>
+                      <td><span class="pill">${u.mfaEnabled ? 'On' : 'Off'}</span></td>
+                      <td><span class="chip">${u.adminLevel}</span></td>
+                      <td class="nowrap">
+                          <button class="btn btn-primary small btn-edit-user" data-id="${u.id}">Edit</button>
+                          <button class="btn ${u.status==='Active' ? 'btn-warn' : 'btn-ok'} small btn-toggle-status" data-id="${u.id}">
+                              ${u.status==='Active' ? 'Suspend' : 'Activate'}
+                          </button>
+                      </td>
+                  </tr>`).join('') || '<tr><td colspan="7" class="muted">No users match filters.</td></tr>'}
+              </tbody>
+          </table>
+      </div>`;
+  }
+
+  function openUserModal(userId = null){
+    const user = userId ? userById(userId) : null;
+    const isEditing = !!user;
+    const modal = $('#modal');
+    modal.classList.remove('hidden');
+    const companyOptions = `<option value="${session.companyId}" selected>${escapeHTML(companyById(session.companyId).name)}</option>`;
+
+    const companyType = typeOf(session.companyId);
+    const availableRoles = state.roles[companyType] || [];
+    const roleOptions = availableRoles.map(r => `<option value="${r}" ${user?.role === r ? 'selected':''}>${escapeHTML(r)}</option>`).join('');
+    const adminLevelOptions = ['None', 'Limited', 'Standard', 'Super'].map(lvl => `<option value="${lvl}" ${user?.adminLevel === lvl ? 'selected':''}>${lvl}</option>`).join('');
+    modal.innerHTML = `
+      <div class="card" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:999;">
+        <div class="card" style="width:500px;background:#0d1217">
+          <div class="row-between">
+            <div class="section-title">${isEditing ? 'Edit User' : 'Add New User'}</div>
+            <button id="xModal" class="btn">×</button>
+          </div>
+          <div class="col">
+            <label class="label">Full Name</label>
+            <input id="userName" class="input" value="${escapeHTML(user?.name || '')}" />
+            <label class="label">Email</label>
+            <input id="userEmail" class="input" type="email" value="${escapeHTML(user?.email || '')}" ${isEditing ? 'readonly' : ''} />
+            <label class="label">Company</label>
+            <select id="userCompany" class="input" disabled>${companyOptions}</select>
+            <label class="label">Role</label>
+            <select id="userRole" class="input">${roleOptions}</select>
+            <label class="label">Admin Level</label>
+            <select id="userAdminLevel" class="input" ${!isAtLeast('Super') ? 'disabled':''}>${adminLevelOptions}</select>
+            <div class="row">
+              <input type="checkbox" id="userMfa" ${user?.mfaEnabled ? 'checked':''}>
+              <label for="userMfa" class="label">MFA Enabled</label>
+            </div>
+            <div class="row right">
+              <button id="saveUserBtn" class="btn btn-brand">${isEditing ? 'Save Changes' : 'Create User'}</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    $('#xModal').addEventListener('click', () => { modal.classList.add('hidden'); modal.innerHTML=''; });
+    $('#saveUserBtn').addEventListener('click', () => {
+        const name = $('#userName').value.trim();
+        const email = $('#userEmail').value.trim();
+        const companyId = session.companyId;
+        const role = $('#userRole').value;
+        const adminLevel = $('#userAdminLevel').value;
+        const mfaEnabled = $('#userMfa').checked;
+        if(!name || !email || !role){
+            toast('All fields are required.', 'warn');
+            return;
+        }
+        if(isEditing){
+            const originalUser = deepClone(user);
+            user.name = name;
+            user.companyId = companyId;
+            user.role = role;
+            if(isAtLeast('Super')) user.adminLevel = adminLevel;
+            user.mfaEnabled = mfaEnabled;
+            addAuditLog('user_update', {
+              targetUserId: user.id,
+              targetUserEmail: user.email,
+              changes: getObjectDiff(originalUser, user)
+            });
+            toast('User updated successfully.');
+        } else {
+            if((state.users || []).find(u => u.email.toLowerCase() === email.toLowerCase())){
+              toast('User with this email already exists.', 'err');
+              return;
+            }
+            const newUser = {
+                id: shortId('U'),
+                name, email, companyId, role, adminLevel: isAtLeast('Super') ? adminLevel : 'None', mfaEnabled,
+                status: 'Active',
+                createdAt: now(),
+                lastLogin: null
+            };
+            state.users.push(newUser);
+            addAuditLog('user_create', {targetUserId: newUser.id, targetUserEmail: newUser.email});
+            toast('User created successfully.');
+        }
+        save();
+        renderSysAdminUsers();
+        modal.classList.add('hidden');
+        modal.innerHTML='';
+    });
+  }
+
+  function getObjectDiff(orig, updated) {
+    const diff = [];
+    for(const key in updated){
+      if(orig.hasOwnProperty(key) && String(orig[key]) !== String(updated[key])){
+        diff.push({ field: key, from: orig[key], to: updated[key]});
+      }
+    }
+    return diff;
+  }
+
+  function exportToCSV(data, filename) {
+    if (!data || data.length === 0) {
+      toast('No data to export.', 'warn');
+      return;
+    }
+    const replacer = (key, value) => value === null ? '' : value;
+    const header = Object.keys(data[0]);
+    const csv = [
+      header.join(','),
+      ...data.map(row => header.map(fieldName => JSON.stringify(row[fieldName], replacer)).join(','))
+    ].join('\r\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    if (link.download !== undefined) {
+      const url = URL.createObjectURL(blob);
+      link.setAttribute("href", url);
+      link.setAttribute("download", filename);
+      link.style.visibility = 'hidden';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  }
+  
+  function canManageDocuments(){
+    const allowedRoles = ['QA Manager', 'Logistics Manager', 'Logistics Coordinator', 'Sys Admin'];
+    return allowedRoles.includes(session.role);
+  }
+  function canViewDocuments(){
+    return true; 
+  }
+  function getDocumentStatus(doc){
+    if (!doc.expiresAt) return 'Permanent';
+    const daysLeft = (new Date(doc.expiresAt) - Date.now()) / 86400000;
+    if (daysLeft <= 0) return 'Expired';
+    if (daysLeft <= 30) return 'Expiring Soon';
+    return 'Valid';
+  }
+  function getCompanyDocuments(companyId){
+    return state.companyDocuments?.filter(doc => doc.companyId === companyId) || [];
+  }
+  
+  function fileToDataURL(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+    });
+  }
+
+  async function uploadCompanyDocument(file, metadata){
+    if (!canManageDocuments()) {
+      toast('Your role cannot upload documents.', 'err');
+      return false;
+    }
+    if (file.size > MAX_FILE_SIZE) {
+      toast('File too large (max 5MB)', 'err');
+      return false;
+    }
+    try {
+      const dataUrl = await fileToDataURL(file);
+      const hash = await hashDataURL(dataUrl);
+      const doc = {
+        id: shortId('DOC'),
+        companyId: session.companyId,
+        name: metadata.name || file.name,
+        category: metadata.category,
+        type: metadata.type,
+        description: metadata.description,
+        fileHash: hash,
+        dataUrl: dataUrl,
+        uploadedBy: session.userId,
+        uploadedAt: now(),
+        expiresAt: metadata.expiresAt,
+        tags: metadata.tags || []
+      };
+      if (!state.companyDocuments) state.companyDocuments = [];
+      state.companyDocuments.push(doc);
+      addAuditLog('document_upload', {
+        documentId: doc.id,
+        documentName: doc.name,
+        category: doc.category
+      });
+      save();
+      return doc;
+    } catch (err) {
+      console.error(err);
+      toast('Document upload failed', 'err');
+      return false;
+    }
+  }
+
+  function getCategoryDescription(category) {
+    const descs = {
+      'Regulatory': 'Official permits and licenses required for operation.',
+      'Quality & Safety': 'Certifications related to food safety and quality standards.',
+      'Sustainability': 'Documents for ethical and environmental claims.',
+      'Operational': 'Logistics, insurance, and commercial paperwork.',
+      'Product-Specific': 'Detailed analysis and specifications for products.'
+    };
+    return descs[category] || 'General documents.';
+  }
+
+  function renderDocuments(){
+    const me = companyById(session.companyId);
+    const documents = getCompanyDocuments(me.id);
+    const canManage = canManageDocuments();
+    
+    const docsByCategory = {};
+    if (state.documentCategories) {
+        Object.keys(state.documentCategories).forEach(cat => {
+            docsByCategory[cat] = documents.filter(doc => doc.category === cat);
+        });
+    }
+
+    $('#tab-documents').innerHTML = `
+      <div class="row-between">
+        <div class="section-title">Company Documents</div>
+        <button id="btnUploadDoc" class="btn btn-brand ${canManage ? '' : 'hidden'}">Upload Document</button>
+      </div>
+      <div class="grid cols-1" style="gap:1rem;">
+        ${Object.entries(docsByCategory).map(([category, docs]) => `
+          <div class="card">
+            <div class="row-between">
+              <h3 style="margin:0;">${escapeHTML(category)} (${docs.length})</h3>
+              <span class="muted small">${getCategoryDescription(category)}</span>
+            </div>
+            <div class="divider"></div>
+            ${docs.length > 0 ? renderDocumentTable(docs) : '<div class="muted">No documents in this category.</div>'}
+          </div>
+        `).join('')}
+      </div>
+    `;
+    if (canManage) {
+      $('#btnUploadDoc').addEventListener('click', openUploadModal);
+    }
+    wireDocumentActions();
+  }
+
+  function renderDocumentTable(docs){
+    return `
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Document</th><th>Type</th><th>Status</th><th>Expires</th><th>Uploaded</th><th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${docs.map(doc => {
+            const status = getDocumentStatus(doc);
+            const statusClass = status === 'Valid' ? 'ok' : status === 'Expired' ? 'block' : 'warn';
+            return `
+              <tr>
+                <td>
+                  <strong>${escapeHTML(doc.name)}</strong>
+                  ${doc.description ? `<br><span class="muted small">${escapeHTML(doc.description)}</span>` : ''}
+                </td>
+                <td>${escapeHTML(doc.type || '-')}</td>
+                <td><span class="tag ${statusClass}">${status}</span></td>
+                <td class="small">${doc.expiresAt ? new Date(doc.expiresAt).toLocaleDateString() : 'Never'}</td>
+                <td class="small">${new Date(doc.uploadedAt).toLocaleDateString()}</td>
+                <td class="nowrap">
+                  <button class="btn btn-primary small btn-view-doc" data-id="${doc.id}">View</button>
+                  <button class="btn btn-primary small btn-attach-doc" data-id="${doc.id}">Attach to PO</button>
+                  ${canManageDocuments() ? `<button class="btn btn-danger small btn-delete-doc" data-id="${doc.id}">Delete</button>` : ''}
+                </td>
+              </tr>
+            `;
+          }).join('')}
+        </tbody>
+      </table>
+    `;
+  }
+
+  function openUploadModal(){
+    const modal = $('#modal');
+    modal.classList.remove('hidden');
+    const categories = Object.keys(state.documentCategories || {});
+    const categoryOptions = categories.map(cat => `<option value="${cat}">${cat}</option>`).join('');
+    modal.innerHTML = `
+      <div class="card" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:999">
+        <div class="card" style="width:600px;background:#0d1217">
+          <div class="row-between">
+            <div class="section-title">Upload Company Document</div>
+            <button id="xModal" class="btn">×</button>
+          </div>
+          <div class="col">
+            <label class="label">Document File</label>
+            <input id="docFile" class="input" type="file" accept=".pdf,.jpg,.jpeg,.png" />
+            <label class="label">Document Name</label>
+            <input id="docName" class="input" placeholder="Enter document name" />
+            <label class="label">Category</label>
+            <select id="docCategory" class="input">${categoryOptions}</select>
+            <label class="label">Document Type</label>
+            <select id="docType" class="input"></select>
+            <label class="label">Description (Optional)</label>
+            <textarea id="docDescription" class="input" placeholder="Additional notes about this document"></textarea>
+            <label class="label">Expiration Date (Optional)</label>
+            <input id="docExpires" class="input" type="date" />
+            <div class="row right" style="margin-top:1rem;">
+              <button id="uploadBtn" class="btn btn-brand">Upload Document</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    $('#docCategory').addEventListener('change', updateDocumentTypes);
+    $('#xModal').addEventListener('click', () => { modal.classList.add('hidden'); modal.innerHTML=''; });
+    $('#uploadBtn').addEventListener('click', handleDocumentUpload);
+    updateDocumentTypes();
+  }
+  
+  function updateDocumentTypes() {
+    const category = $('#docCategory').value;
+    const types = state.documentCategories[category] || [];
+    const typeSelect = $('#docType');
+    typeSelect.innerHTML = types.map(t => `<option value="${t}">${t}</option>`).join('');
+  }
+
+  async function handleDocumentUpload() {
+    const fileInput = $('#docFile');
+    const file = fileInput.files[0];
+    if (!file) {
+        toast('Please select a file to upload.', 'warn');
+        return;
+    }
+    const metadata = {
+        name: $('#docName').value.trim(),
+        category: $('#docCategory').value,
+        type: $('#docType').value,
+        description: $('#docDescription').value.trim(),
+        expiresAt: $('#docExpires').value || null
+    };
+
+    if (!metadata.name) {
+        toast('Document Name is required.', 'warn');
+        return;
+    }
+    
+    const uploadedDoc = await uploadCompanyDocument(file, metadata);
+    if (uploadedDoc) {
+        toast('Document uploaded successfully.', 'ok');
+        $('#modal').classList.add('hidden');
+        $('#modal').innerHTML = '';
+        renderDocuments();
+    }
+  }
+
+  function wireDocumentActions() {
+    const container = $('#tab-documents');
+    if (!container) return;
+    container.addEventListener('click', (ev) => {
+        const btn = ev.target.closest('button');
+        if (!btn) return;
+        const docId = btn.dataset.id;
+        if (!docId) return;
+
+        if (btn.classList.contains('btn-view-doc')) {
+            const doc = state.companyDocuments.find(d => d.id === docId);
+            if (doc && doc.dataUrl) {
+                window.open(doc.dataUrl, '_blank');
+            } else {
+                toast('Document content not available for viewing.', 'warn');
+            }
+        }
+        
+        if (btn.classList.contains('btn-delete-doc')) {
+            if (confirm('Are you sure you want to delete this document?')) {
+                const docIndex = state.companyDocuments.findIndex(d => d.id === docId);
+                if (docIndex > -1) {
+                    const doc = state.companyDocuments[docIndex];
+                    addAuditLog('document_delete', { documentId: doc.id, documentName: doc.name });
+                    state.companyDocuments.splice(docIndex, 1);
+                    save();
+                    toast('Document deleted.');
+                    renderDocuments();
+                }
+            }
+        }
+        
+        if (btn.classList.contains('btn-attach-doc')) {
+            openAttachToPOModal(docId);
+        }
+    });
+  }
+
+  function openAttachToPOModal(docId) {
+    const modal = $('#modal');
+    modal.classList.remove('hidden');
+    const myOpenPOs = state.pos.filter(p => (p.buyerId === session.companyId || p.supplierId === session.companyId) && p.status !== 'Completed');
+    
+    if (myOpenPOs.length === 0) {
+      toast('You have no open POs to attach this document to.', 'warn');
+      modal.classList.add('hidden');
+      return;
+    }
+
+    const poOptions = myOpenPOs.map(po => `<option value="${po.id}">PO ${po.id} (${po.items[0].name})</option>`).join('');
+    
+    modal.innerHTML = `
+      <div class="card" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:999">
+        <div class="card" style="width:500px;background:#0d1217">
+          <div class="row-between">
+            <div class="section-title">Attach Document to PO</div>
+            <button id="xModal" class="btn">×</button>
+          </div>
+          <div class="col">
+            <label class="label">Select a Purchase Order</label>
+            <select id="poSelect" class="input">${poOptions}</select>
+            <div class="row right" style="margin-top:1rem;">
+              <button id="confirmAttachBtn" class="btn btn-brand">Attach</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    $('#xModal').addEventListener('click', () => { modal.classList.add('hidden'); modal.innerHTML=''; });
+    $('#confirmAttachBtn').addEventListener('click', () => {
+      const poId = $('#poSelect').value;
+      attachDocumentToPO(docId, poId);
+      if ($('#tab-pos') && !$('#tab-pos').classList.contains('hidden')) {
+        renderPOs();
+      }
+      modal.classList.add('hidden');
+      modal.innerHTML = '';
+    });
+  }
+  
+  function attachDocumentToPO(docId, poId){
+    const doc = state.companyDocuments?.find(d => d.id === docId);
+    const po = state.pos.find(p => p.id === poId);
+    if (!doc || !po) return;
+
+    if (!po.attachedDocs) po.attachedDocs = [];
+    if (po.attachedDocs.some(d => d.docId === docId)) {
+      toast(`Document is already attached to PO ${poId}`, 'warn');
+      return;
+    }
+    
+    po.attachedDocs.push({
+      docId: doc.id,
+      name: doc.name,
+      attachedBy: session.userId,
+      attachedAt: now()
+    });
+
+    po.thread.push({
+      author: session.companyId + ':' + session.role,
+      msg: `Attached company document: ${escapeHTML(doc.name)}`,
+      ts: now()
+    });
+    save();
+    toast(`Document attached to PO ${poId}`);
+  }
+
+  // Load session and start the app
+  loadSession();
+  renderLogin();
+
+})();
+</script>
+</body>
+</html>
