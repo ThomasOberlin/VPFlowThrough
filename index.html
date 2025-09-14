@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VeriPura Demo — Supply Chain Flow</title>
+  <title>VeriPura Demo — Single File Build</title>
   <style>
     :root{
       --bg:#0b0d10;
@@ -134,29 +134,407 @@
   filter: brightness(0.95);
 }
 
-/* Demo instructions styling */
-.demo-instructions {
-  background: linear-gradient(135deg, #1a4b3a, #0f2b23);
-  border: 2px solid var(--brand);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
+</style>
 
-.demo-accounts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
+<script>
+(function(){
+  try{
+    var k = 'vp_theme';
+    var s = localStorage.getItem(k);
+    var t = s ? s : ((window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light');
+    document.documentElement.setAttribute('data-theme', t);
+  }catch(e){}
+})();
+</script>
 
-.demo-account {
-  background: rgba(255,255,255,0.05);
-  border-radius: 0.75rem;
-  padding: 1rem;
-  border: 1px solid var(--border);
-}
+<style id="vp-light-theme">
+  /* Softer, low‑glare palette */
+  html[data-theme="light"]{
+    --bg:#eef2f6;            /* page background – soft cool grey */
+    --panel:#ffffff;         /* cards/panels */
+    --muted:#f5f7fb;         /* muted fills */
+    --text:#0e1623;          /* main text */
+    --sub:#485260;           /* secondary text */
+    --brand:#16a34a;         /* VeriPura green */
+    --accent:#2563eb;        /* links/accents */
+    --warn:#b45309;
+    --danger:#b91c1c;
+    --ok:#059669;
+    --chip:#f8fafc;
+    --border:#dfe6ef;        /* slightly stronger than before */
+    --shadow:0 1px 2px rgba(16,24,40,.06),0 4px 12px rgba(16,24,40,.06);
+  }
 
+  /* Base */
+  html[data-theme="light"] body{ background:var(--bg); color:var(--text); }
+  html[data-theme="light"] a{ color:var(--accent); }
+
+  /* Panels / cards / sidebar */
+  html[data-theme="light"] .card,
+  html[data-theme="light"] .panel,
+  html[data-theme="light"] .sidebar,
+  html[data-theme="light"] header,
+  html[data-theme="light"] footer,
+  html[data-theme="light"] main,
+  html[data-theme="light"] section,
+  html[data-theme="light"] nav{
+    background:var(--panel);
+    box-shadow:var(--shadow);
+    border-color:var(--border);
+  }
+
+  /* Inputs */
+  html[data-theme="light"] input,
+  html[data-theme="light"] select,
+  html[data-theme="light"] textarea{
+    background:#ffffff;
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+  html[data-theme="light"] input::placeholder,
+  html[data-theme="light"] textarea::placeholder{ color:#778396; }
+
+  /* Buttons */
+  html[data-theme="light"] .btn{
+    background:linear-gradient(180deg,#ffffff,#f3f6fb);
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+  html[data-theme="light"] .btn:hover{ filter:brightness(.98); }
+  html[data-theme="light"] .btn:active{ transform:translateY(1px); }
+
+  /* Tags / statuses use color tints for readability */
+  html[data-theme="light"] .tag{ 
+    color:#1f2a37; 
+    background:#f2f5fa; 
+    border:1px solid #e1e7f0; 
+  }
+  html[data-theme="light"] .tag.ok{ 
+    color:#166534; 
+    background:#eafaf1; 
+    border-color:#c6ead6; 
+  }
+  html[data-theme="light"] .tag.warn{ 
+    color:#92400e; 
+    background:#fff4e5; 
+    border-color:#f3d0a6; 
+  }
+  html[data-theme="light"] .tag.block{ 
+    color:#9f1239; 
+    background:#feecef; 
+    border-color:#f6c6cf; 
+  }
+
+  /* Chips */
+  html[data-theme="light"] .chip{
+    background:var(--chip);
+    border:1px solid var(--border);
+    color:var(--sub);
+  }
+
+  /* Accordion items (e.g., PO rows) */
+  html[data-theme="light"] .accordion-item{ 
+    background:#ffffff; 
+    border:1px solid var(--border); 
+    box-shadow:var(--shadow);
+  }
+
+  /* Tables: zebra rows & clearer headers */
+  html[data-theme="light"] .table th{ 
+    background:#f2f6fb; 
+    color:#1f2a37; 
+    border-bottom:1px solid var(--border);
+  }
+  html[data-theme="light"] .table tr:nth-child(even) td{ background:#fbfdff; }
+
+  /* KBD / helper keys */
+  html[data-theme="light"] .kbd{ background:#eef2f7; border-color:#d7dee7; color:#1f2937; }
+</style>
+
+<style id="vp-light-theme-tweaks">
+  /* Button variants: give them solid colors for clarity */
+  html[data-theme="light"] .btn-brand,
+  html[data-theme="light"] .btn-primary{
+    background: var(--accent);
+    color: #ffffff;
+    border-color: transparent;
+  }
+  html[data-theme="light"] .btn-ok{
+    background: var(--ok);
+    color:#ffffff;
+    border-color: transparent;
+  }
+  html[data-theme="light"] .btn-warn{
+    background: var(--warn);
+    color:#ffffff;
+    border-color: transparent;
+  }
+  html[data-theme="light"] .btn-danger{
+    background: var(--danger);
+    color:#ffffff;
+    border-color: transparent;
+  }
+  html[data-theme="light"] .btn-brand{ background: var(--brand); }
+  html[data-theme="light"] .btn:hover{ filter:none; opacity:.96 }
+  html[data-theme="light"] .btn:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* Pills (e.g., thread author badges) */
+  html[data-theme="light"] .pill{
+    background:#121826;
+    color:#f8fafc;
+    border:0;
+  }
+
+  /* Section headings & dividers */
+  html[data-theme="light"] h2, 
+  html[data-theme="light"] h3{
+    color:#0e1623;
+  }
+  html[data-theme="light"] hr{
+    border:0;
+    border-top:1px solid var(--border);
+  }
+
+  /* PO list hover cue */
+  html[data-theme="light"] .accordion-item:hover{
+    box-shadow: 0 2px 6px rgba(16,24,40,.08), 0 8px 18px rgba(16,24,40,.08);
+  }
+
+  /* Dense chip layout */
+  html[data-theme="light"] .chip{ padding: .2rem .5rem; }
+
+  /* Softer red for 'Label not accepted' style (uses .tag.block) */
+  html[data-theme="light"] .tag.block{
+    background:#fdecef;
+    border-color:#f5c6cf;
+    color:#7f1d1d;
+  }
+</style>
+
+
+<style id="vp-light-warm-theme">
+  /* Warm Light theme (paper/sepia, low glare) */
+  html[data-theme="light-warm"]{
+    --bg:#f6f2ea;            /* warm paper tone */
+    --panel:#fffdf8;         /* slightly warm panel */
+    --muted:#f7f4ee;
+    --text:#0e141a;          /* deep neutral */
+    --sub:#5b5750;
+    --brand:#16a34a;         /* keep brand green */
+    --accent:#1f4fd7;        /* slightly toned blue */
+    --warn:#b05305;
+    --danger:#b91c1c;
+    --ok:#0b8a5b;
+    --chip:#fffcf6;
+    --border:#e6dfd2;
+    --shadow:0 1px 2px rgba(89,69,32,.06),0 4px 12px rgba(89,69,32,.06);
+  }
+  html[data-theme="light-warm"] body{ background:var(--bg); color:var(--text); }
+  html[data-theme="light-warm"] a{ color:var(--accent); }
+
+  html[data-theme="light-warm"] .card,
+  html[data-theme="light-warm"] .panel,
+  html[data-theme="light-warm"] .sidebar,
+  html[data-theme="light-warm"] header,
+  html[data-theme="light-warm"] footer,
+  html[data-theme="light-warm"] main,
+  html[data-theme="light-warm"] section,
+  html[data-theme="light-warm"] nav{
+    background:var(--panel);
+    box-shadow:var(--shadow);
+    border-color:var(--border);
+  }
+
+  html[data-theme="light-warm"] input,
+  html[data-theme="light-warm"] select,
+  html[data-theme="light-warm"] textarea{
+    background:#fffdf8;
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+  html[data-theme="light-warm"] input::placeholder,
+  html[data-theme="light-warm"] textarea::placeholder{ color:#7b776f; }
+
+  html[data-theme="light-warm"] .btn{
+    background:linear-gradient(180deg,#fffdf8,#f3efe6);
+    border:1px solid var(--border);
+    color:var(--text);
+  }
+  html[data-theme="light-warm"] .btn-brand{ background:var(--brand); color:#fff; border-color:transparent; }
+  html[data-theme="light-warm"] .btn-primary{ background:var(--accent); color:#fff; border-color:transparent; }
+  html[data-theme="light-warm"] .btn-ok{ background:var(--ok); color:#fff; border-color:transparent; }
+  html[data-theme="light-warm"] .btn-warn{ background:var(--warn); color:#fff; border-color:transparent; }
+  html[data-theme="light-warm"] .btn-danger{ background:var(--danger); color:#fff; border-color:transparent; }
+
+  html[data-theme="light-warm"] .tag{ background:#fff8ee; border:1px solid #eadfcd; color:#3a332b; }
+  html[data-theme="light-warm"] .tag.ok{ background:#ecfaf3; border-color:#c4e9d7; color:#166534; }
+  html[data-theme="light-warm"] .tag.warn{ background:#fff1e0; border-color:#f1d1a8; color:#8a4b0b; }
+  html[data-theme="light-warm"] .tag.block{ background:#fee8ea; border-color:#f3c3cc; color:#7f1d1d; }
+
+  html[data-theme="light-warm"] .table th{ background:#f5efe4; color:#1e272f; border-bottom:1px solid var(--border); }
+  html[data-theme="light-warm"] .table tr:nth-child(even) td{ background:#fffaf3; }
+  html[data-theme="light-warm"] .accordion-item{ background:#fffdf8; border:1px solid var(--border); box-shadow:var(--shadow); }
+  html[data-theme="light-warm"] .chip{ background:var(--chip); border:1px solid var(--border); color:var(--sub); }
+  html[data-theme="light-warm"] .pill{ background:#1a1f2a; color:#fffaf0; border:0; }
+</style>
+
+
+<style id="vp-density-styles">
+  /* Compact density reduces vertical rhythm by ~14% */
+  html[data-density="compact"] .btn{ padding:6px 10px; font-size:12px; border-radius:.5rem; }
+  html[data-density="compact"] .chip{ padding:.15rem .4rem; font-size:12px; }
+  html[data-density="compact"] .pill{ padding:.2rem .5rem; font-size:12px; }
+  html[data-density="compact"] .input, 
+  html[data-density="compact"] select, 
+  html[data-density="compact"] textarea{ padding:6px 8px; font-size:13px; }
+  html[data-density="compact"] .accordion-item{ margin:8px 0; border-radius:.8rem; }
+  html[data-density="compact"] .accordion-head{ padding:10px 14px; }
+  html[data-density="compact"] .accordion-body{ padding:12px 14px; }
+  html[data-density="compact"] .card, 
+  html[data-density="compact"] .panel{ padding:12px; }
+  html[data-density="compact"] .table td, 
+  html[data-density="compact"] .table th{ padding:8px 10px; }
+  html[data-density="compact"] h2{ margin:10px 0 8px; }
+  html[data-density="compact"] h3{ margin:8px 0 6px; }
+  html[data-density="compact"] .section{ margin:10px 0; }
+</style>
+
+
+<style id="vp-emerald-theme">
+  /* Emerald (green dark) theme */
+  html[data-theme="emerald"]{
+    --bg:#0b2a22;            /* deep green base */
+    --bg2:#10362b;           /* secondary for gradients */
+    --panel:#104033;         /* panel surface */
+    --muted:#0f372c;         /* muted fills */
+    --text:#e9fff5;          /* primary text */
+    --sub:#bfe8d4;           /* secondary text */
+    --brand:#22c55e;         /* emerald */
+    --accent:#34d399;        /* accent green */
+    --warn:#f59e0b;          /* amber */
+    --danger:#ef4444;        /* red */
+    --ok:#10b981;            /* success */
+    --chip:#0d2f26;
+    --border:#1d8a68;        /* card borders */
+    --glow:#3af29d;          /* subtle neon for outlines */
+    --shadow:0 1px 2px rgba(0,0,0,.35),0 8px 24px rgba(0,0,0,.35);
+  }
+
+  html[data-theme="emerald"] body{
+    background: radial-gradient(1000px 600px at 20% -10%, var(--bg2), transparent) , 
+                radial-gradient(800px 500px at 100% 0%, #0c3a2d55, transparent),
+                var(--bg);
+    color: var(--text);
+  }
+
+  html[data-theme="emerald"] a{ color: var(--accent); }
+
+  /* Panels / containers */
+  html[data-theme="emerald"] .card,
+  html[data-theme="emerald"] .panel,
+  html[data-theme="emerald"] .sidebar,
+  html[data-theme="emerald"] header,
+  html[data-theme="emerald"] footer,
+  html[data-theme="emerald"] main,
+  html[data-theme="emerald"] section,
+  html[data-theme="emerald"] nav{
+    background: var(--panel);
+    color: var(--text);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+  }
+
+  /* Headings get a soft emerald tint */
+  html[data-theme="emerald"] h1, 
+  html[data-theme="emerald"] h2, 
+  html[data-theme="emerald"] h3{
+    color:#a7f3c6;
+  }
+
+  /* Inputs */
+  html[data-theme="emerald"] input,
+  html[data-theme="emerald"] select,
+  html[data-theme="emerald"] textarea{
+    background:#0e332a;
+    border:1px solid #1a5e49;
+    color:var(--text);
+  }
+  html[data-theme="emerald"] input::placeholder,
+  html[data-theme="emerald"] textarea::placeholder{ color:#91cbb0; }
+
+  /* Buttons */
+  html[data-theme="emerald"] .btn{ 
+    background: linear-gradient(180deg, #165a45, #114a39);
+    border:1px solid #1b7b5c;
+    color:#ecfdf5;
+  }
+  html[data-theme="emerald"] .btn-brand{ background: var(--brand); color:#052e23; border-color:transparent; }
+  html[data-theme="emerald"] .btn-primary{ background: #1f9e6d; color:#052e23; border-color:transparent; }
+  html[data-theme="emerald"] .btn-ok{ background: var(--ok); color:#052e23; border-color:transparent; }
+  html[data-theme="emerald"] .btn-warn{ background: var(--warn); color:#241a02; border-color:transparent; }
+  html[data-theme="emerald"] .btn-danger{ background: var(--danger); color:#2a0b0b; border-color:transparent; }
+  html[data-theme="emerald"] .btn:hover{ filter:none; opacity:.95 }
+  html[data-theme="emerald"] .btn:focus-visible{ outline:2px solid var(--glow); outline-offset:2px; }
+
+  /* Tags */
+  html[data-theme="emerald"] .tag{
+    background:#0c342a;
+    border:1px solid #1f6f56;
+    color:#d7fbec;
+  }
+  html[data-theme="emerald"] .tag.ok{ background:#0f3b2f; border-color:#2cc98e; color:#a7f3c6; }
+  html[data-theme="emerald"] .tag.warn{ background:#3b2e0f; border-color:#e9b15b; color:#ffd79a; }
+  html[data-theme="emerald"] .tag.block{ background:#3b1216; border-color:#f08a95; color:#fecdd3; }
+
+  /* Chips */
+  html[data-theme="emerald"] .chip{
+    background: var(--chip);
+    border: 1px solid var(--border);
+    color: var(--sub);
+  }
+
+  /* Tables and accordion */
+  html[data-theme="emerald"] .table th{ background:#123b30; color:#d9fff0; border-bottom:1px solid var(--border); }
+  html[data-theme="emerald"] .table tr:nth-child(even) td{ background:#0f332a; }
+  html[data-theme="emerald"] .accordion-item{ background:#0f3a2f; border:1px solid var(--border); box-shadow: var(--shadow); }
+  html[data-theme="emerald"] .accordion-item:hover{ box-shadow: 0 2px 8px rgba(0,0,0,.4), 0 10px 28px rgba(0,0,0,.35); }
+
+  /* Fancy outline for hero/intro blocks if present */
+  html[data-theme="emerald"] .panel.hero, 
+  html[data-theme="emerald"] .card.hero{
+    box-shadow: 0 0 0 1px var(--glow), inset 0 0 0 1px rgba(255,255,255,.03), var(--shadow);
+    border-radius: 18px;
+  }
+</style>
+
+
+
+
+
+<style id="vp-promo-login">
+  #loginPromo .section-title{ font-size:1.25rem; font-weight:700; margin-bottom:.35rem; }
+  #loginPromo .promo-list{ margin: .25rem 0 .5rem 1.1rem; padding:0; }
+  #loginPromo .promo-list li{ margin:.4rem 0; line-height:1.45; }
+  #loginPromo .promo-cta{ text-align:right; margin-top:.35rem; color:var(--sub); font-size:.95rem; }
+  /* Slightly larger text on wider screens */
+  @media (min-width: 1100px){
+    #loginPromo .section-title{ font-size:1.35rem; }
+    #loginPromo .promo-list li{ margin:.5rem 0; }
+  }
+</style>
+
+<style>
+/* === SysAdmin-only nav CSS (defensive) === */
+body[data-role="Sys Admin"] .nav [data-tab]:not([data-tab="sysadmin"]){ display:none !important; }
+body[data-role="Sys Admin"] .nav button, 
+body[data-role="Sys Admin"] .nav a { display:none !important; }
+body[data-role="Sys Admin"] .nav [data-tab="sysadmin"],
+body[data-role="Sys Admin"] .nav .logout-btn,
+body[data-role="Sys Admin"] .nav button.logout,
+body[data-role="Sys Admin"] .nav a.logout { display:block !important; }
 </style>
 </head>
 <body>
@@ -165,11 +543,285 @@
 <script>
 (function(){
   "use strict";
+  function escapeHTML(str) {
+    if (typeof str !== 'string') return str;
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
 
   // ---------- Utilities ----------
+// === Counterparty helpers (PO display) ===
+function counterpartyCompanyId(po, meId = session.companyId){
+  if(!po) return null;
+  const buyer = po.buyerId || po.buyer_id || po.buyer;
+  const supplier = (po.supplierId ?? po.sellerId ?? po.supplier_id ?? po.supplier);
+  if(meId === buyer) return supplier;
+  if(meId === supplier) return buyer;
+  return supplier && supplier !== meId ? supplier : buyer;
+}
+function counterpartyName(po, meId = session.companyId){
+  const otherId = counterpartyCompanyId(po, meId);
+  const other = otherId ? companyById(otherId) : null;
+  return other ? other.name : 'Unknown';
+}
+
+
+// === Traceability Fallbacks ===
+// If a PO has missing/empty trace, infer a sensible default from buyer/supplier types and items.
+function ensureTrace(p){
+  try{
+    if(!p || (p.trace && Object.keys(p.trace||{}).length>0)) return p;
+    const buyer = companyById(p.buyerId);
+    const supplier = companyById(p.supplierId);
+    const bt = buyer ? buyer.type : null;
+    const st = supplier ? supplier.type : null;
+
+    // infer chain order based on company types
+    let chain = [];
+    if (st==='Coop' && bt==='Processor'){ chain = [supplier.id, buyer.id]; }
+    else if (st==='Processor' && bt==='Importer'){ chain = [supplier.id, buyer.id]; }
+    else if (st==='Coop' && bt==='Importer'){ chain = [supplier.id, 'C_PRO', buyer.id]; } // fallback via processor
+    else { chain = [supplier?.id||'C_COO1','C_PRO', buyer?.id||'C_IMP']; }
+
+    // build simple lots from items (split first item qty 60/40 as two lots)
+    const total = (p.items||[]).reduce((a,it)=> a + (Number(it.qty)||0), 0);
+    const lotA = Math.round(total * 0.6) || (total||100)/2;
+    const lotB = Math.max(0, total - lotA);
+    const lots = [{id:'LOT-A', qty: lotA}, {id:'LOT-B', qty: lotB}];
+
+    // basic geo path string (can be refined later)
+    const geo = (function(){
+      const map = {
+        'C_COO1':'16.07,102.67', 'C_COO2':'14.22,100.88',
+        'C_PRO':'13.75,100.50', 'C_IMP':'52.37,4.90'
+      };
+      const points = chain.map(c=> map[c] || map[c?.id] || '—').filter(Boolean);
+      return points.join(' → ');
+    })();
+
+    p.trace = { lots, chain, geo };
+  }catch(e){ /* no-op */ }
+  return p;
+}
+// === BEGIN: AUTO-APPLIED TAB RULES ===
+const TAB_RULES = {
+  "Importer": {
+    "Procurement Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "QA / Label Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents",
+      "Business Partners"
+    ],
+    "Logistics Coordinator": [
+      "Purchase Orders",
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "Finance / Wallet Admin": [
+      "Wallet"
+    ],
+    "Sys Admin": [
+      "Sys Admin"
+    ]
+  },
+  "Processor": {
+    "Export Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "Production Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "Account Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "Quality Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents"
+    ],
+    "Compliance Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents"
+    ],
+    "Logistics Manager": ["Purchase Orders",
+      
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "Finance / Wallet Admin": [
+      "Wallet",
+      "Business Partners"
+    ],
+    "Sys Admin": [
+      "Sys Admin"
+    ]
+  },
+  "Coop": {
+    "Sales Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "QA Liaison": [
+      "Purchase Orders",
+      "Documents",
+      "Business Partners"
+    ],
+    "Operations Manager": [
+      "Dashboard",
+      "Purchase Orders",
+      "Documents",
+      "Wallet",
+      "Business Partners",
+      "Invitations"
+    ],
+    "Finance / Wallet Admin": [
+      "Wallet"
+    ],
+    "Sys Admin": [
+      "Sys Admin"
+    ]
+  }
+};
+// Helper: given company type (Importer/Processor/Coop) and role string, return a Set of allowed tabs
+function allowedTabsFor(companyType, role){
+  try{
+    const ct = canonCompanyType(companyType);
+    const rr = canonRoleName(role);
+    const map = TAB_RULES[ct];
+    if(!map) return new Set(); // strict: unknown company -> deny all
+    const list = map[rr] || [];
+    return new Set(list);
+  }catch(e){ return new Set(); }
+}
+// === END: AUTO-APPLIED TAB RULES ===
+
+// --- Canonical company/role normalizers ---
+const ROLE_ALIASES = {
+  "sys admin": "Sys Admin",
+  "system admin": "Sys Admin",
+  "finance/wallet admin": "Finance / Wallet Admin",
+  "finance wallet admin": "Finance / Wallet Admin",
+  "qa/label manager": "QA / Label Manager",
+  "qa label manager": "QA / Label Manager",
+  "procurement manager": "Procurement Manager",
+  "logistics coordinator": "Logistics Coordinator",
+  "export manager": "Export Manager",
+  "production manager": "Production Manager",
+  "quality manager": "Quality Manager",
+  "compliance manager": "Compliance Manager",
+  "account manager": "Account Manager",
+  "sales manager": "Sales Manager",
+  "operations manager": "Operations Manager"
+};
+function canonCompanyType(t){
+  if(!t) return null;
+  const s = String(t).trim().toLowerCase();
+  if (s.includes('import')) return 'Importer';
+  if (s.includes('process')) return 'Processor';
+  if (s.includes('coop')) return 'Coop';
+  if (s.includes('co-op') || s.includes('cooperative')) return 'Coop';
+  return t;
+}
+function canonRoleName(r){
+  if(!r) return null;
+  const s = String(r).replace(/\s*\/\s*/g,'/').replace(/\s+/g,' ').trim().toLowerCase();
+  const aliased = ROLE_ALIASES[s];
+  if (aliased) return aliased;
+  // Title case fallback
+  return r;
+}
+
+// --- Canonical tab id mapping (UI label <-> data-tab) ---
+const TAB_NAME_TO_ID = {
+  "Dashboard": "dashboard",
+  "Purchase Orders": "pos",
+  "Documents": "documents",
+  "Wallet": "wallet",
+  "Business Partners": "partners",
+  "Invitations": "invitations",
+  "Sys Admin": "sysadmin"
+};
+function canonTabId(s){
+  if(!s) return "";
+  const raw = String(s).trim();
+  if (TAB_NAME_TO_ID[raw]) return TAB_NAME_TO_ID[raw];
+  const low = raw.toLowerCase().replace(/[\s_-]+/g,'');
+  if (low === 'po' || low === 'purchaseorders') return 'pos';
+  if (low === 'sysadmin' || low === 'systemadmin' || low === 'sysadministration') return 'sysadmin';
+  if (low === 'businesspartners' || low === 'partners') return 'partners';
+  const known = ['dashboard','pos','documents','wallet','partners','invitations','sysadmin'];
+  if (known.includes(String(s).toLowerCase())) return String(s).toLowerCase();
+  return raw;
+}
+// Context helper to resolve current company type and role for the logged-in user
+function _vpCurrentContext(){
+  try{
+    const sess = (typeof session!=='undefined' && session && session.userId) ? session
+                : (window.session ? window.session : (state && state.session ? state.session : null));
+    let user = null;
+    if(sess && sess.userId){
+      user = (state.users||[]).find(u=>u.id===sess.userId) || null;
+    } else if (state && state.users && state.users.length){
+      user = state.users.find(u=>u.status==='Active') || state.users[0];
+    }
+    if(!user) return { companyType: null, role: null, companyId: null };
+    const company = (state.companies||[]).find(c=>c.id===user.companyId) || null;
+    const companyType = company ? company.type : null;
+    return { companyType, role: user.role, companyId: user.companyId, user };
+  }catch(e){
+    return { companyType: null, role: null, companyId: null };
+  }
+}
+
+// Predicate used by nav/tab renderers
+
+function isTabAllowed(tabLabel){
+  const ctx = _vpCurrentContext();
+  const ct = canonCompanyType(ctx.companyType);
+  const rr = canonRoleName(ctx.role);
+  if(!ct || !rr) return false; // strict: hide if unknown
+  const allowed = allowedTabsFor(ct, rr);
+  if(allowed.size===0) return false;
+  const cid = canonTabId(tabLabel);
+  const allowedIds = new Set(Array.from(allowed).map(canonTabId));
+  return allowedIds.has(cid);
+}
+
   const $ = (sel, root=document) => root.querySelector(sel);
   const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
-  const escapeHTML = (s) => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
   function toast(msg, kind='ok'){
     const el = document.createElement('div');
     el.className = 'toast ' + (kind==='warn'?'warn':kind==='err'?'err':'ok');
@@ -212,7 +864,7 @@
     }
   }
 
-  // ---------- Enhanced Demo Seeding ----------
+  // ---------- Seeding ----------
   const seed = {
     companies: [
       {id:'C_IMP', name:'EU Asian Importers', type:'Importer', city:'Amsterdam'},
@@ -224,40 +876,55 @@
       {id:'LOG_TH1', name:'Thai Express Logistics', region:'Thailand', city:'Bangkok', specialty:'Ground Freight - Regular', services:['domestic_ground','port_transfer']},
       {id:'LOG_TH2', name:'Bangkok Cold Chain Services', region:'Thailand', city:'Bangkok', specialty:'Ground Freight - Refrigerated', services:['refrigerated_ground','cold_storage']},
       {id:'LOG_TH3', name:'Siam Ocean Freight Lines', region:'Thailand', city:'Laem Chabang', specialty:'Ocean Freight', services:['ocean_freight','container_shipping']},
+      {id:'LOG_TH4', name:'Mekong Transport Solutions', region:'Thailand', city:'Chiang Mai', specialty:'Ground Freight - Regular', services:['domestic_ground','rural_delivery']},
+      {id:'LOG_TH5', name:'Thai Refrigerated Express', region:'Thailand', city:'Surat Thani', specialty:'Ground Freight - Refrigerated', services:['refrigerated_ground','fresh_transport']},
       {id:'LOG_EU1', name:'Rotterdam Port Logistics', region:'EU', city:'Rotterdam', specialty:'Ocean Freight', services:['ocean_freight','port_operations','container_handling']},
       {id:'LOG_EU2', name:'EuroFreight Solutions', region:'EU', city:'Hamburg', specialty:'Ground Freight - Regular', services:['eu_ground','distribution','warehousing']},
       {id:'LOG_EU3', name:'Antwerp Cold Storage Transport', region:'EU', city:'Antwerp', specialty:'Ground Freight - Refrigerated', services:['refrigerated_ground','cold_storage','eu_distribution']},
+      {id:'LOG_EU4', name:'Amsterdam Logistics Hub', region:'EU', city:'Amsterdam', specialty:'Ground Freight - Regular', services:['eu_ground','last_mile','distribution']},
+      {id:'LOG_EU5', name:'North Sea Freight Services', region:'EU', city:'Hamburg', specialty:'Ocean Freight', services:['ocean_freight','short_sea','feeder_services']},
+      {id:'LOG_EU6', name:'Rotterdam Refrigerated Transport', region:'EU', city:'Rotterdam', specialty:'Ground Freight - Refrigerated', services:['refrigerated_ground','cold_chain','eu_distribution']}
     ],
     users: [
-      // IMPORTER USERS (EU Asian Importers)
-      {id:'U001', companyId:'C_IMP', email:'james.anderson@euasian.com', name:'James Anderson', role:'Procurement Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
-      {id:'U002', companyId:'C_IMP', email:'maria.schmidt@euasian.com', name:'Maria Schmidt', role:'QA Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
-      {id:'U003', companyId:'C_IMP', email:'raj.patel@euasian.com', name:'Raj Patel', role:'Finance/Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U001', companyId:'C_IMP', email:'j.anderson@euasian.com', name:'James Anderson', role:'Procurement Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U002', companyId:'C_IMP', email:'m.schmidt@euasian.com', name:'Maria Schmidt', role:'QA / Label Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U003', companyId:'C_IMP', email:'r.patel@euasian.com', name:'Raj Patel', role:'Finance / Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
       {id:'U004', companyId:'C_IMP', email:'admin@euasian.com', name:'System Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'Super'},
-      
-      // PROCESSOR USERS (Bangkok Chili Co.)
-      {id:'U006', companyId:'C_PRO', email:'satoshi.tanaka@bkc.co.th', name:'Satoshi Tanaka', role:'Export Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
-      {id:'U007', companyId:'C_PRO', email:'anong.wong@bkc.co.th', name:'Anong Wong', role:'Quality Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
-      {id:'U008', companyId:'C_PRO', email:'chai.somchai@bkc.co.th', name:'Chai Somchai', role:'Logistics Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
-      {id:'U009', companyId:'C_PRO', email:'priya.chen@bkc.co.th', name:'Priya Chen', role:'Finance/Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U005', companyId:'C_IMP', email:'s.dupont@euasian.com', name:'Sophie Dupont', role:'Procurement Manager', status:'Suspended', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U006', companyId:'C_PRO', email:'s.tanaka@bkc.co.th', name:'Satoshi Tanaka', role:'Export Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U007', companyId:'C_PRO', email:'a.wong@bkc.co.th', name:'Anong Wong', role:'Quality Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U008', companyId:'C_PRO', email:'c.somchai@bkc.co.th', name:'Chai Somchai', role:'Logistics Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U009', companyId:'C_PRO', email:'p.chen@bkc.co.th', name:'Priya Chen', role:'Finance / Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
       {id:'U010', companyId:'C_PRO', email:'admin@bkc.co.th', name:'Processor Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'Standard'},
-      
-      // COOP USERS (NE Thai Herb Producer)
-      {id:'U012', companyId:'C_COO1', email:'niran.pranee@nethp.co.th', name:'Niran Pranee', role:'Sales Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
-      {id:'U013', companyId:'C_COO1', email:'kamala.somsak@nethp.co.th', name:'Kamala Somsak', role:'QA Liaison', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
-      {id:'U014', companyId:'C_COO1', email:'fon.bounma@nethp.co.th', name:'Fon Bounma', role:'Finance/Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U011', companyId:'C_PRO', email:'t.nguyen@bkc.co.th', name:'Tuan Nguyen', role:'Production Manager', status:'Suspended', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U012', companyId:'C_COO1', email:'n.pranee@nethp.co.th', name:'Niran Pranee', role:'Sales Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U013', companyId:'C_COO1', email:'k.somsak@nethp.co.th', name:'Kamala Somsak', role:'QA Liaison', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U014', companyId:'C_COO1', email:'f.bounma@nethp.co.th', name:'Fon Bounma', role:'Finance / Wallet Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
       {id:'U015', companyId:'C_COO1', email:'admin@nethp.co.th', name:'Coop Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'Limited'},
-      
+      {id:'U016', companyId:'C_COO2', email:'m.surin@cto.co.th', name:'Malee Surin', role:'Sales Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U017', companyId:'C_COO2', email:'u.kanya@cto.co.th', name:'Ubon Kanya', role:'QA Liaison', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U018', companyId:'C_COO2', email:'v.chinda@cto.co.th', name:'Vimala Chinda', role:'Finance / Wallet Admin', status:'Suspended', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U019', companyId:'C_COO2', email:'admin@cto.co.th', name:'Readonly Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'Limited'},
+      {id:'U020', companyId:'C_IMP', email:'l.admin@euasian.com', name:'Limited Admin', role:'Sys Admin', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'Limited'},
+      {id:'U021', companyId:'C_IMP', email:'l.vanderberg@euasian.com', name:'Lars van der Berg', role:'Logistics Coordinator', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'},
+      {id:'U022', companyId:'C_COO1', email:'w.transport@nethp.co.th', name:'Wichai Sompong', role:'Operations Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:false, adminLevel:'None'},
+      {id:'U023', companyId:'C_COO2', email:'s.logistics@cto.co.th', name:'Siriporn Thanakit', role:'Operations Manager', status:'Active', lastLogin:now(), createdAt:now(), mfaEnabled:true, adminLevel:'None'}
     ],
     roles: {
-      Importer: ['Procurement Manager','QA Manager','Logistics Manager','Finance/Wallet Admin','Sys Admin'],
-      Processor: ['Export Manager','Sales/Account Manager','Production Manager','Quality Manager','Logistics Manager','Finance/Wallet Admin','Sys Admin'],
-      Coop: ['Sales Manager','QA Liaison','Logistics Coordinator','Finance/Wallet Admin','Sys Admin']
+      Importer: ['Procurement Manager','QA / Label Manager','Logistics Coordinator','Finance / Wallet Admin','Sys Admin'],
+      Processor: ['Export Manager', 'Account Manager', 'Production Manager', 'Quality Manager','Compliance Manager', 'Logistics Manager','Finance / Wallet Admin','Sys Admin'],
+      Coop: ['Sales Manager','QA Liaison', 'Operations Manager','Finance / Wallet Admin','Sys Admin']
     },
     companyDocuments: [
       {id:'DOC001', companyId:'C_IMP', name:'EORI Registration Certificate', category:'Regulatory', type:'EORI', fileHash:'abc123def456', uploadedBy:'U002', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*730).toISOString(), status:'Valid', tags:['EU-Required', 'Import-Essential']},
-      {id:'DOC002', companyId:'C_PRO', name:'GMP Certificate', category:'Quality & Safety', type:'GMP', fileHash:'m7n8o9p0q1r2', uploadedBy:'U007', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*365).toISOString(), status:'Valid'},
-      {id:'DOC003', companyId:'C_COO1', name:'Organic Certificate', category:'Sustainability', type:'Organic', fileHash:'e5f6g7h8i9j0', uploadedBy:'U013', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*120).toISOString(), status:'Valid'},
+      {id:'DOC002', companyId:'C_IMP', name:'Import License 2025', category:'Regulatory', type:'Import License', fileHash:'f7a2b3c4d5e6', uploadedBy:'U002', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*365).toISOString(), status:'Valid'},
+      {id:'DOC003', companyId:'C_IMP', name:'Cargo Insurance Policy', category:'Operational', type:'Insurance', fileHash:'g1h2i3j4k5l6', uploadedBy:'U021', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*180).toISOString(), status:'Valid'},
+      {id:'DOC004', companyId:'C_PRO', name:'GMP Certificate', category:'Quality & Safety', type:'GMP', fileHash:'m7n8o9p0q1r2', uploadedBy:'U007', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*25).toISOString(), status:'Expiring Soon'},
+      {id:'DOC005', companyId:'C_PRO', name:'HACCP Plan 2025', category:'Quality & Safety', type:'HACCP', fileHash:'s3t4u5v6w7x8', uploadedBy:'U007', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*180).toISOString(), status:'Valid'},
+      {id:'DOC006', companyId:'C_PRO', name:'Establishment Approval Cert', category:'Regulatory', type:'Establishment Approval', fileHash:'y9z0a1b2c3d4', uploadedBy:'U007', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*365).toISOString(), status:'Valid'},
+      {id:'DOC007', companyId:'C_COO1', name:'Organic Certificate', category:'Sustainability', type:'Organic', fileHash:'e5f6g7h8i9j0', uploadedBy:'U013', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*120).toISOString(), status:'Valid'},
+      {id:'DOC008', companyId:'C_COO1', name:'Global GAP Certificate', category:'Sustainability', type:'Global GAP', fileHash:'k1l2m3n4o5p6', uploadedBy:'U013', uploadedAt:now(), expiresAt: new Date(Date.now()+86400000*200).toISOString(), status:'Valid'},
+      {id:'DOC009', companyId:'C_COO2', name:'Organic Certificate', category:'Sustainability', type:'Organic', fileHash:'q7r8s9t0u1v2', uploadedBy:'U017', uploadedAt:now(), expiresAt: new Date(Date.now()-86400000*30).toISOString(), status:'Expired'}
     ],
     documentCategories: {
       'Regulatory': ['EORI', 'TRACES', 'Establishment Approval', 'Import License'],
@@ -268,160 +935,137 @@
     },
     certs: [
       {companyId:'C_IMP', type:'EORI', expiresAt: new Date(Date.now()+86400000*365).toISOString()},
-      {companyId:'C_PRO', type:'GMP', expiresAt: new Date(Date.now()+86400000*365).toISOString()},
+      {companyId:'C_IMP', type:'ISO9001', expiresAt: new Date(Date.now()+86400000*180).toISOString()},
+      {companyId:'C_PRO', type:'GMP', expiresAt: new Date(Date.now()+86400000*25).toISOString()},
       {companyId:'C_PRO', type:'HACCP', expiresAt: new Date(Date.now()+86400000*180).toISOString()},
       {companyId:'C_COO1', type:'Organic', expiresAt: new Date(Date.now()+86400000*120).toISOString()},
       {companyId:'C_COO1', type:'FairTrade', expiresAt: new Date(Date.now()+86400000*90).toISOString()},
+      {companyId:'C_COO2', type:'Organic', expiresAt: new Date(Date.now()-86400000*30).toISOString()},
+      {companyId:'C_COO2', type:'FairTrade', expiresAt: new Date(Date.now()+86400000*15).toISOString()}
     ],
     wallets: [
-      {companyId:'C_IMP', balance:5000, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:5000}]},
-      {companyId:'C_PRO', balance:3500, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:3500}]},
-      {companyId:'C_COO1', balance:2000, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:2000}]},
-      {companyId:'C_COO2', balance:1500, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:1500}]}
+      {companyId:'C_IMP', balance:3200, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:3200}]},
+      {companyId:'C_PRO', balance:2800, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:2800}]},
+      {companyId:'C_COO1', balance:1200, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:1200}]},
+      {companyId:'C_COO2', balance:950, ledger:[{ts:now(), kind:'Received', detail:'Initial VERI allocation', amount:950}]}
     ],
     invitations: [
-      // Pre-established partnerships for demo
+      {id:'I1', fromCompanyId:'C_IMP', fromRole:'Procurement Manager', toCompanyId:'C_PRO', toType:'Processor', status:'Pending', createdAt: now()},
+      {id:'I2', fromCompanyId:'C_PRO', fromRole:'Account Manager', toCompanyId:'C_COO1', toType:'Coop', status:'Accepted', createdAt: now(), decidedAt: now()},
+      {id:'I3', fromCompanyId:'C_PRO', fromRole:'Account Manager', toCompanyId:'C_COO2', toType:'Coop', status:'Pending', createdAt: now()}
     ],
     partners: [
-      // Pre-established partnerships for demo flow
-      {id:'P1', aId:'C_IMP', bId:'C_PRO', status:'Accepted', directionForA:'Supplier', source:'invitation', createdAt: now()},
-      {id:'P2', aId:'C_PRO', bId:'C_COO1', status:'Accepted', directionForA:'Supplier', source:'invitation', createdAt: now()},
+      {id:'E1', aId:'C_IMP', bId:'C_PRO', status:'Accepted', directionForA:'Supplier', source:'invitation', createdAt: now()},
+      {id:'E2', aId:'C_PRO', bId:'C_COO1', status:'Accepted', directionForA:'Supplier', source:'invitation', createdAt: now()}
     ],
-    labels: [],
-    awards: [],
+    labels: [
+      {poId:'P2003', status:'Accepted'}, {poId:'P1005', status:'Accepted'}, {poId:'P1007', status:'Accepted'}
+    ],
+    awards: [
+      {poId:'P1009', type:'organic', amount:1000, status:'Completed', awardedAt: now()}, {poId:'P1010', type:'fairTrade', amount:800, status:'Completed', awardedAt: now()}
+    ],
     walletAuditLog: [],
     auditLog: [],
     securityEvents: [],
     pos: [
-      // DEMO FLOW 1: Importer → Processor → Coop (Tom Yum Paste)
-      { 
-        id:'DEMO001', 
-        buyerId:'C_IMP', 
-        supplierId:'C_PRO', 
-        currency:'EUR', 
-        items:[{name:'Tom Yum Paste 24x200g', qty:1000, price:2.2}], 
-        total:2200, 
-        status:'Open', 
-        labelStatus:'Requested', 
-        rewards:{organic:1200,fairTrade:800}, 
-        docChecklist:[{name:'GMP', state:'Valid'}, {name:'HACCP', state:'Valid'}], 
-        docs:[], 
-        thread:[
-          {author:'C_IMP:Procurement Manager', msg:'🎯 DEMO ORDER: Tom Yum Paste for Q4 launch - high priority', ts:now()},
-          {author:'C_IMP:QA Manager', msg:'Label requested: EU compliant labeling with allergen declaration', ts:now()}
-        ], 
-        shipments:[], 
-        trace:{}, 
-        createdAt: now(),
-        labelHistory: [
-          {id:'LBL_REQ001', action:'requested', actor:'C_IMP:QA Manager', timestamp:now(), version:1, requirements:'EU compliant labeling with allergen declaration'}
-        ]
-      },
-      
-      // Supporting PO: Processor → Coop for raw materials
-      { 
-        id:'DEMO002', 
-        buyerId:'C_PRO', 
-        supplierId:'C_COO1', 
-        currency:'THB', 
-        items:[{name:'Fresh Lemongrass (kg)', qty:200, price:42}, {name:'Thai Chilies (kg)', qty:150, price:85}], 
-        total:21150, 
-        status:'Open', 
-        labelStatus:'Not Required', 
-        rewards:{organic:800,fairTrade:600}, 
-        docChecklist:[{name:'Organic', state:'Valid'}, {name:'FairTrade', state:'Valid'}], 
-        docs:[], 
-        thread:[
-          {author:'C_PRO:Export Manager', msg:'🌶️ DEMO ORDER: Raw materials for Tom Yum production batch DEMO001', ts:now()},
-          {author:'C_COO1:Sales Manager', msg:'Confirmed availability - organic certified stock ready', ts:now()}
-        ], 
-        shipments:[], 
-        trace:{}, 
-        createdAt: now()
-      },
-
-      // DEMO FLOW 2: Complete example showing shipped status
-      { 
-        id:'DEMO003', 
-        buyerId:'C_IMP', 
-        supplierId:'C_PRO', 
-        currency:'EUR', 
-        items:[{name:'Green Curry Paste 18x400g', qty:500, price:3.1}], 
-        total:1550, 
-        status:'Shipped', 
-        labelStatus:'Accepted', 
-        rewards:{organic:900,fairTrade:700}, 
-        docChecklist:[{name:'GMP', state:'Valid'}], 
-        docs:[], 
-        thread:[
-          {author:'C_IMP:Procurement Manager', msg:'✅ COMPLETED DEMO: Green curry approved and shipped', ts:now()},
-          {author:'C_PRO:Logistics Manager', msg:'Shipped via Siam Ocean Freight - Container DEMO12345', ts:now()},
-          {author:'C_IMP:QA Manager', msg:'Label accepted: Meets all EU requirements', ts:now()}
-        ], 
-        shipments:[{
-          id:'S1', 
-          qty:500, 
-          ts:now(), 
-          carrier:'Siam Ocean Freight Lines', 
-          logisticsProvider: 'LOG_TH3', 
-          tracking:'DEMO-TRK-001'
-        }], 
-        trace:{
-          lots:[
-            {id:'L-CURRY-001', qty:300, source:'Premium Spice Farm'},
-            {id:'L-CURRY-002', qty:200, source:'Organic Herb Garden'}
-          ],
-          chain:['Premium Spice Farm','Organic Herb Garden','C_PRO','C_IMP'],
-          geo:'13.76,100.50'
-        }, 
-        createdAt: now(),
-        labelHistory: [
-          {id:'LBL_REQ003', action:'requested', actor:'C_IMP:QA Manager', timestamp:now(), version:1, requirements:'Green curry paste EU labeling'},
-          {id:'LBL_UPL003', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Green_Curry_Label.pdf', fileHash:'gc123456', fileSize:1234567},
-          {id:'LBL_ACC003', action:'accepted', actor:'C_IMP:QA Manager', timestamp:now(), version:3, comments:'Meets all EU requirements'}
-        ]
-      },
-
-      // Supporting completed coop order
-      { 
-        id:'DEMO004', 
-        buyerId:'C_PRO', 
-        supplierId:'C_COO1', 
-        currency:'THB', 
-        items:[{name:'Thai Basil (kg)', qty:100, price:65}], 
-        total:6500, 
-        status:'Completed', 
-        labelStatus:'Not Required', 
-        rewards:{organic:500,fairTrade:300}, 
-        docChecklist:[{name:'Organic', state:'Valid'}], 
-        docs:[], 
-        thread:[
-          {author:'C_PRO:Export Manager', msg:'✅ COMPLETED: Thai basil for green curry batch DEMO003', ts:now()},
-          {author:'C_COO1:Sales Manager', msg:'Delivered fresh - excellent quality', ts:now()}
-        ], 
-        shipments:[{
-          id:'S1', 
-          qty:100, 
-          ts:now(), 
-          received:true, 
-          receivedAt:now(), 
-          completed:true, 
-          completedAt:now(),
-          carrier:'Local Organic Transport',
-          logisticsProvider: 'LOG_TH1'
-        }], 
-        trace:{
-          lots:[{id:'L-BASIL-001', qty:100, source:'Certified Organic Farm'}],
-          chain:['Certified Organic Farm','C_COO1','C_PRO'],
-          geo:'15.87,100.99'
-        }, 
-        createdAt: now()
-      }
+      { id:'P1001', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Sweet Thai Chili Sauce 12x300ml', qty:1200, price:1.7}], total:2040, status:'Open', labelStatus:'Requested', rewards:{organic:1000,fairTrade:1000,rainforest:1000}, docChecklist:[{name:'GMP', state:'Expiring Soon'}], docs:[], thread:[ {author:'C_IMP:Procurement Manager', msg:'Kickoff PO for Q4', ts:now()}, {author:'C_IMP:QA / Label Manager', msg:'Label requested: Standard labeling requirements with nutritional info', ts:now()} ], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ001', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'Standard labeling requirements with nutritional info'} ] },
+      { id:'P2001', buyerId:'C_PRO', supplierId:'C_COO1', currency:'THB', items:[{name:'Fresh Lemongrass (kg)', qty:500, price:42}], total:21000, status:'Open', labelStatus:'Not Required', rewards:{organic:800,fairTrade:600}, docChecklist:[{name:'Organic', state:'Valid'}], docs:[], thread:[{author:'C_PRO:Account Manager', msg:'Standard lemongrass order', ts:now()}], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now() },
+      { id:'P1002', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Tom Yum Paste 24x200g', qty:800, price:2.2}], total:1760, status:'Approved', labelStatus:'Accepted', rewards:{organic:1200,fairTrade:800}, docChecklist:[{name:'GMP', state:'Expiring Soon'}, {name:'HACCP', state:'Valid'}], docs:[], thread:[ {author:'C_IMP:Procurement Manager', msg:'Approved tom yum paste order', ts:now()}, {author:'C_PRO:Account Manager', msg:'Thanks, will prepare shipment', ts:now()}, {author:'C_IMP:QA / Label Manager', msg:'Label requested: EU compliant labeling with allergen info', ts:now()}, {author:'C_PRO:Quality Manager', msg:'Label uploaded: Tom_Yum_Label_v2.pdf [a1b2c3d4]', ts:now()}, {author:'C_IMP:QA / Label Manager', msg:'Label accepted: Looks good, meets EU requirements', ts:now()} ], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ002', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'EU compliant labeling with allergen info'}, {id:'LBL_UPL002', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Tom_Yum_Label_v2.pdf', fileHash:'a1b2c3d4', fileSize:2048576}, {id:'LBL_ACC002', action:'accepted', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:3, comments:'Looks good, meets EU requirements'} ] },
+      { id:'P2002', buyerId:'C_PRO', supplierId:'C_COO2', currency:'THB', items:[{name:'Organic Thai Basil (kg)', qty:300, price:65}], total:19500, status:'Approved', labelStatus:'Not Required', rewards:{organic:1000,fairTrade:600}, docChecklist:[{name:'Organic', state:'Expired'}], docs:[], thread:[ {author:'C_PRO:Account Manager', msg:'Approved basil order', ts:now()}, {author:'C_COO2:Sales Manager', msg:'Will harvest fresh for you', ts:now()} ], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now() },
+      { id:'P2003', buyerId:'C_PRO', supplierId:'C_COO1', currency:'THB', items:[{name:'Fresh Thai Chilies (kg)', qty:400, price:85}], total:34000, status:'ReadyToShip', labelStatus:'Not Required', rewards:{organic:1000,fairTrade:800}, docChecklist:[{name:'Organic', state:'Valid'}, {name:'FairTrade', state:'Valid'}], docs:[], thread:[ {author:'C_PRO:Account Manager', msg:'QA completed - PASS', ts:now()}, {author:'C_COO1:Sales Manager', msg:'Ready for pickup', ts:now()} ], shipments:[{id:'S1', qty:400, ts:now()}], trace:{ lots:[ {id:'L-CHILI-001', qty:240, source:'Primary Farm'}, {id:'L-CHILI-002', qty:100, source:'Secondary Farm'}, {id:'L-CHILI-003', qty:60, source:'Tertiary Farm'} ], chain:['Primary Farm','Secondary Farm','Tertiary Farm','C_COO1','C_PRO'], geo:'15.87,100.99' }, createdAt: now() },
+      { id:'P1003', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Green Curry Paste 18x400g', qty:600, price:3.1}], total:1860, status:'Open', labelStatus:'Rejected', rewards:{organic:900,fairTrade:700}, docChecklist:[{name:'GMP', state:'Expiring Soon'}], docs:[], thread:[ {author:'C_PRO:Production Manager', msg:'Batch ready for production', ts:now()}, {author:'C_IMP:QA / Label Manager', msg:'Label requested: Green curry paste labeling with heat level indicator', ts:now()}, {author:'C_PRO:Quality Manager', msg:'Label uploaded: Green_Curry_Label_v1.pdf [x9y8z7w6]', ts:now()}, {author:'C_IMP:QA / Label Manager', msg:'Label rejected: Missing proper heat level warnings and ingredient allergen list format incorrect', ts:now()} ], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ003', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'Green curry paste labeling with heat level indicator'}, {id:'LBL_UPL003', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Green_Curry_Label_v1.pdf', fileHash:'x9y8z7w6', fileSize:1536789}, {id:'LBL_REJ003', action:'rejected', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:3, reason:'Missing proper heat level warnings and ingredient allergen list format incorrect', requiresResubmission:true} ] },
+      { id:'P1004', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Coconut Milk 24x400ml', qty:1000, price:1.5}], total:1500, status:'Shipped', labelStatus:'Accepted', rewards:{organic:800,fairTrade:600}, docChecklist:[{name:'GMP', state:'Expiring Soon'}, {name:'HACCP', state:'Valid'}], docs:[], thread:[ {author:'C_PRO:Logistics Manager', msg:'Shipped via Bangkok Port', ts:now()}, {author:'C_IMP:Procurement Manager', msg:'Tracking received', ts:now()}, {author:'C_IMP:QA / Label Manager', msg:'Label accepted: Perfect coconut milk labeling', ts:now()} ], shipments:[{id:'S1', qty:1000, ts:now(), carrier:'Siam Ocean Freight Lines', logisticsProvider: 'LOG_TH3', tracking:'TL2024001234'}], trace:{ lots:[ {id:'L-COCONUT-001', qty:600, source:'Southern Plantations'}, {id:'L-COCONUT-002', qty:250, source:'Central Farms'}, {id:'L-COCONUT-003', qty:150, source:'Northern Cooperatives'} ], chain:['Southern Plantations','Central Farms','Northern Cooperatives','C_PRO','C_IMP'], geo:'7.89,98.40' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ004', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'Standard coconut milk labeling'}, {id:'LBL_UPL004', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Coconut_Milk_Label.pdf', fileHash:'c0c0nut1', fileSize:1234567}, {id:'LBL_ACC004', action:'accepted', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:3, comments:'Perfect coconut milk labeling'} ] },
+      { id:'P2004', buyerId:'C_PRO', supplierId:'C_COO2', currency:'THB', items:[{name:'Kaffir Lime Leaves (kg)', qty:150, price:120}], total:18000, status:'Shipped', labelStatus:'Not Required', rewards:{organic:600,fairTrade:400}, docChecklist:[{name:'Organic', state:'Expired'}], docs:[], thread:[{author:'C_COO2:Sales Manager', msg:'Shipped fresh lime leaves', ts:now()}], shipments:[{id:'S1', qty:150, ts:now(), carrier: 'Local Transport', logisticsProvider: 'LOG_TH4'}], trace:{ lots:[ {id:'L-LIME-001', qty:90, source:'Main Grove'}, {id:'L-LIME-002', qty:37, source:'Hill Grove'}, {id:'L-LIME-003', qty:23, source:'Valley Grove'} ], chain:['Main Grove','Hill Grove','Valley Grove','C_COO2','C_PRO'], geo:'14.22,100.88' }, createdAt: now() },
+      { id:'P1005', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Pad Thai Sauce 15x350ml', qty:900, price:2.8}], total:2520, status:'Open', labelStatus:'Pending Review', rewards:{organic:1100,fairTrade:900}, docChecklist:[{name:'GMP', state:'Expiring Soon'}], docs:[], thread:[ {author:'C_IMP:QA / Label Manager', msg:'Label requested: Pad Thai sauce with authentic recipe indicator', ts:now()}, {author:'C_PRO:Quality Manager', msg:'Label uploaded: Pad_Thai_Sauce_Label.pdf [pt123456]', ts:now()} ], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ005', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'Pad Thai sauce with authentic recipe indicator'}, {id:'LBL_UPL005', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Pad_Thai_Sauce_Label.pdf', fileHash:'pt123456', fileSize:1987654} ] },
+      { id:'P1006', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Massaman Curry Paste 20x250g', qty:500, price:2.9}], total:1450, status:'Completed', labelStatus:'Accepted', rewards:{organic:800,fairTrade:600}, docChecklist:[{name:'GMP', state:'Expiring Soon'}, {name:'HACCP', state:'Valid'}], docs:[], thread:[ {author:'C_IMP:Finance / Wallet Admin', msg:'Payment completed - thank you!', ts:now()}, {author:'C_PRO:Account Manager', msg:'Pleasure doing business', ts:now()} ], shipments:[{id:'S1', qty:500, ts:now(), received:true, receivedAt:now(), completed:true, completedAt:now()}], trace:{ lots:[ {id:'L-MASSAMAN-001', qty:300, source:'Specialty Spice Farms'}, {id:'L-MASSAMAN-002', qty:125, source:'Premium Herb Gardens'}, {id:'L-MASSAMAN-003', qty:75, source:'Artisan Producers'} ], chain:['Specialty Spice Farms','Premium Herb Gardens','Artisan Producers','C_PRO','C_IMP'], geo:'13.76,100.50' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ006', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'Massaman curry paste premium labeling'}, {id:'LBL_UPL006', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Massaman_Label_Premium.pdf', fileHash:'mass123', fileSize:2456789}, {id:'LBL_ACC006', action:'accepted', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:3, comments:'Excellent premium labeling'} ] },
+      { id:'P1007', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Fish Sauce 12x700ml', qty:400, price:4.2}], total:1680, status:'Completed', labelStatus:'Accepted', rewards:{organic:600,fairTrade:500}, docChecklist:[{name:'GMP', state:'Expiring Soon'}], docs:[], thread:[ {author:'C_IMP:Procurement Manager', msg:'Excellent quality as always', ts:now()}, {author:'C_PRO:Quality Manager', msg:'Traditional fermentation process maintained', ts:now()} ], shipments:[{id:'S1', qty:400, ts:now(), received:true, receivedAt:now(), completed:true, completedAt:now()}], trace:{ lots:[ {id:'L-FISH-001', qty:240, source:'Coastal Fisheries'}, {id:'L-FISH-002', qty:100, source:'Island Producers'}, {id:'L-FISH-003', qty:60, source:'Artisan Fishers'} ], chain:['Coastal Fisheries','Island Producers','Artisan Fishers','C_PRO','C_IMP'], geo:'12.55,101.02' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ007', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'Traditional fish sauce labeling'}, {id:'LBL_UPL007', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Fish_Sauce_Traditional.pdf', fileHash:'fish789', fileSize:1876543}, {id:'LBL_ACC007', action:'accepted', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:3, comments:'Perfect traditional labeling'} ] },
+      { id:'P2005', buyerId:'C_PRO', supplierId:'C_COO1', currency:'THB', items:[{name:'Fresh Galangal (kg)', qty:200, price:95}], total:19000, status:'Open', labelStatus:'Not Required', rewards:{organic:700,fairTrade:500}, docChecklist:[{name:'Organic', state:'Valid'}], docs:[], thread:[{author:'C_PRO:Account Manager', msg:'Need galangal for new product line', ts:now()}], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now() },
+      { id:'P1008', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Red Curry Paste 16x400g', qty:700, price:3.0}], total:2100, status:'Approved', labelStatus:'Accepted', rewards:{organic:1000,fairTrade:800}, docChecklist:[{name:'GMP', state:'Expiring Soon'}, {name:'HACCP', state:'Valid'}], docs:[], thread:[{author:'C_IMP:Procurement Manager', msg:'Red curry approved for production', ts:now()}], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now(), labelHistory: [ {id:'LBL_REQ008', action:'requested', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:1, requirements:'Red curry paste with heat level warnings'}, {id:'LBL_UPL008', action:'uploaded', actor:'C_PRO:Quality Manager', timestamp:now(), version:2, fileName:'Red_Curry_Label_v3.pdf', fileHash:'red456', fileSize:1654321}, {id:'LBL_ACC008', action:'accepted', actor:'C_IMP:QA / Label Manager', timestamp:now(), version:3, comments:'Great heat level indicators'} ] }
     ]
   };
 
   
 let state = load() || seed;
+
+// ---------- VeriPura Demo Augmentation V2 ----------
+function augmentDemoV2(){
+  if(state._augV2) return;
+  const ensureCompany = (id, name, type, city)=>{
+    if(!state.companies.find(c=>c.id===id)){
+      state.companies.push({id, name, type, city});
+    }
+  };
+  const ensurePartner = (aId,bId,status='Accepted',directionForA='Supplier',source='invitation')=>{
+    const a = Math.min(aId, bId);
+    const b = Math.max(aId, bId);
+    if(!state.partners.find(p=>(p.aId===a && p.bId===b))){
+      state.partners.push({id:'E'+Math.random().toString(36).slice(2,8), aId:a, bId:b, status, directionForA, source, createdAt: now()});
+    }
+  };
+  const ensurePO = (po)=>{
+    if(!state.pos.find(p=>p.id===po.id)){
+      if(!po.total && po.items && po.items.length){
+        po.total = po.items.reduce((s,it)=> s + Number(it.qty||0)*Number(it.price||0), 0);
+      }
+      po.docs = po.docs || [];
+      po.thread = po.thread || [];
+      po.shipments = po.shipments || [];
+      po.labelStatus = po.labelStatus || 'Requested';
+      po.createdAt = po.createdAt || now();
+      state.pos.push(po);
+    }
+  };
+  ensureCompany('C_PRO2','Siam Coconut Milk Ltd.','Processor','Surat Thani');
+  ensureCompany('C_PRO3','Phuket Organic Coconut Cream Co.','Processor','Phuket');
+  ensureCompany('C_PRO4','NoodleCup Foods Co., Ltd.','Processor','Ayutthaya');
+  ensureCompany('C_PRO5','OceanBlue Tuna Canners','Processor','Samut Sakhon');
+  ensureCompany('C_PRO6','Royal Bangkok Processing','Processor','Bangkok');
+  ensureCompany('C_PRO7','Thai Heritage Foods','Processor','Phuket');
+  ensureCompany('C_IMP2','EU Gourmet Imports','Importer','Rotterdam');
+  ensureCompany('C_IMP_US','US Pacific Importers','Importer','Los Angeles');
+  ensureCompany('C_IMP_CN','Shanghai Food Imports','Importer','Shanghai');
+  ensureCompany('C_SUP1','Isaan Organic Cooperative','Coop','Udon Thani');
+  ensureCompany('C_SUP2','Mekong Garlic Farmers Union','Coop','Chiang Rai');
+  ensureCompany('C_SUP4','Chiang Mai Lemongrass Collective','Coop','Chiang Mai');
+  
+  ['C_PRO2','C_PRO3','C_PRO4','C_PRO5','C_PRO6','C_PRO7'].forEach(pid=> ensurePartner('C_IMP', pid, 'Accepted','Supplier','invitation'));
+  ['C_IMP2','C_IMP_US','C_IMP_CN'].forEach(iid=> ensurePartner('C_PRO', iid, 'Accepted','Customer','invitation'));
+  ['C_SUP1','C_SUP2','C_SUP4'].forEach(sid=> ensurePartner('C_PRO', sid, 'Accepted','Supplier','invitation'));
+  const importerPOs = [
+    {id:'P1101', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Sweet Chili Sauce 24x200ml', qty:800, price:1.2}], status:'Open', thread:[{author:'C_IMP:Procurement Manager', msg:'Kickoff — confirm delivery window', ts:now()}]},
+    {id:'P1102', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Green Curry Paste 24x200g', qty:600, price:1.5}], status:'Open', thread:[{author:'C_PRO:Export Manager', msg:'Pricing ack; label pending', ts:now()}]},
+    {id:'P1103', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Panang Curry Paste 12x300g', qty:500, price:1.9}], status:'Approved', labelStatus:'Accepted', thread:[{author:'C_IMP:Compliance Manager', msg:'Label accepted', ts:now()}]},
+    {id:'P1104', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Sriracha 12x500ml', qty:700, price:1.8}], status:'Approved', labelStatus:'Accepted', thread:[{author:'C_PRO:Export Manager', msg:'Preparing shipment', ts:now()}]},
+    {id:'P1105', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Tom Yum Paste 24x200g', qty:900, price:1.4}], status:'ReadyToShip', labelStatus:'Accepted', shipments:[{id:'S1', qty:300, ts:now()}], thread:[{author:'C_PRO:Logistics Manager', msg:'First partial shipment created', ts:now()}]},
+    {id:'P1106', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Sweet Basil Leaves (jar)', qty:450, price:2.1}], status:'Shipped', labelStatus:'Accepted', shipments:[{id:'S1', qty:450, ts:now()}], thread:[{author:'C_PRO:Logistics Manager', msg:'Shipped today via Maersk', ts:now()}]},
+    {id:'P1107', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Coconut Milk 24x400ml', qty:1200, price:0.95}], status:'Open', labelStatus:'Requested', thread:[{author:'C_IMP:QA / Label Manager', msg:'Please upload coconut label v1', ts:now()}]},
+    {id:'P1108', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Chili Oil 12x250ml', qty:400, price:2.2}], status:'Open', labelStatus:'Requested', thread:[{author:'C_PRO:Export Manager', msg:'Will share label draft', ts:now()}]},
+    {id:'P1109', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Pad Thai Sauce 12x500ml', qty:500, price:2.0}], status:'Approved', labelStatus:'Accepted', thread:[{author:'C_IMP:Procurement Manager', msg:'Approved — proceed to ship', ts:now()}]},
+    {id:'P1110', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Yellow Curry Paste 20x250g', qty:650, price:1.6}], status:'ReadyToShip', labelStatus:'Accepted', shipments:[{id:'S1', qty:200, ts:now()}], thread:[{author:'C_PRO:Production Manager', msg:'Batch staged', ts:now()}]},
+    {id:'P1111', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Fish Sauce 24x300ml', qty:1000, price:0.8}], status:'Shipped', labelStatus:'Accepted', shipments:[{id:'S1', qty:1000, ts:now()}], thread:[{author:'C_PRO:Logistics Manager', msg:'Container sealed', ts:now()}]},
+    {id:'P1112', buyerId:'C_IMP', supplierId:'C_PRO', currency:'EUR', items:[{name:'Tamarind Paste 12x500g', qty:300, price:2.5}], status:'Completed', labelStatus:'Accepted', shipments:[{id:'S1', qty:300, ts:now(), received:true, receivedAt:now(), completed:true, completedAt:now()}], thread:[{author:'C_IMP:Logistics Coordinator', msg:'Received in warehouse', ts:now()}]},
+  ];
+  importerPOs.forEach(ensurePO);
+
+  const supplierItems = [
+    ['Fresh Red Chili (kg)',120,70], ['Dried Chili (kg)',90,85], ['Garlic (kg)',200,40], ['Lemongrass (kg)',180,35], ['Kaffir Lime Leaves (kg)',160,120], ['Galangal (kg)',150,55],
+  ];
+  ['C_COO1','C_COO2'].forEach((sid, idx)=>{
+    for(let n=1;n<=6;n++){
+      const [name, qty, price] = supplierItems[(n-1)%supplierItems.length];
+      const poId = (sid==='C_COO1' ? 'P210' : 'P220') + n;
+      const th = [];
+      if(n<=4){ th.push({author: sid+':Sales Manager', msg:'Quote ready / available qty confirmed', ts: now()}); }
+      ensurePO({ id: poId, buyerId:'C_PRO', supplierId:sid, currency:'THB', items:[{name, qty, price}], status: (n%3===0?'Approved': (n%2===0?'Open':'ReadyToShip')), labelStatus: (n%2===0?'Requested':'Not Required'), rewards:{organic:600,fairTrade:400}, docs:[], thread: th });
+    }
+  });
+
+  state._augV2 = true;
+  save();
+}
+augmentDemoV2();
+// ---------- End Augmentation ----------
+
 
   // ---------- Relationship policy ----------
   function companyById(id){ return state.companies.find(c=>c.id===id); }
@@ -497,46 +1141,10 @@ let state = load() || seed;
 
   function renderLogin(){
     app.innerHTML = `
-      <div style="max-width:1200px;margin:4vh auto;padding:1rem">
-        <div class="demo-instructions">
-          <div class="section-title" style="color:var(--brand);margin-bottom:1rem;">🌟 VeriPura Supply Chain Demo</div>
-          <p>This demo shows a complete EU-ASEAN traceability flow. Three users can log in to see different perspectives of the same supply chain:</p>
-          
-          <div class="demo-accounts">
-            <div class="demo-account">
-              <h4 style="color:var(--brand);margin:0 0 0.5rem 0;">🏢 IMPORTER (EU)</h4>
-              <p class="small"><strong>Company:</strong> EU Asian Importers</p>
-              <p class="small"><strong>User:</strong> James Anderson (Procurement Manager)</p>
-              <p class="small"><strong>Role:</strong> Creates purchase orders, manages suppliers, reviews labels</p>
-              <p class="small"><strong>Demo POs:</strong> DEMO001 (Tom Yum - Active), DEMO003 (Green Curry - Shipped)</p>
-            </div>
-            
-            <div class="demo-account">
-              <h4 style="color:var(--brand);margin:0 0 0.5rem 0;">🏭 PROCESSOR (Thailand)</h4>
-              <p class="small"><strong>Company:</strong> Bangkok Chili Co., Ltd.</p>
-              <p class="small"><strong>User:</strong> Satoshi Tanaka (Export Manager)</p>
-              <p class="small"><strong>Role:</strong> Processes orders from importers, sources from coops, manages production</p>
-              <p class="small"><strong>Demo POs:</strong> Receives DEMO001/003, Sources DEMO002/004</p>
-            </div>
-            
-            <div class="demo-account">
-              <h4 style="color:var(--brand);margin:0 0 0.5rem 0;">🌾 COOP (Thailand)</h4>
-              <p class="small"><strong>Company:</strong> NE Thai Herb Producer</p>
-              <p class="small"><strong>User:</strong> Niran Pranee (Sales Manager)</p>
-              <p class="small"><strong>Role:</strong> Supplies raw materials to processors, manages organic certifications</p>
-              <p class="small"><strong>Demo POs:</strong> DEMO002 (Lemongrass/Chilies), DEMO004 (Thai Basil - Complete)</p>
-            </div>
-          </div>
-          
-          <div style="margin-top:1rem;padding:1rem;background:rgba(0,0,0,0.3);border-radius:0.5rem;">
-            <p class="small muted"><strong>Demo Flow:</strong> Importer (DEMO001: Tom Yum) → Processor (DEMO002: Sources ingredients) → Coop (Supplies raw materials)</p>
-            <p class="small muted"><strong>Password:</strong> Use "123" for all accounts | <strong>Reset:</strong> Click "Reset Demo Data" to restore original state</p>
-          </div>
-        </div>
-        
+      <div style="max-width:980px;margin:6vh auto;padding:1rem">
         <div class="grid cols-2">
           <div class="card" style="grid-column:1 / span 1">
-            <div class="brand" style="font-size:1.35rem">VeriPura Login</div>
+            <div class="brand" style="font-size:1.35rem">VeriPura <small>EU-ASEAN Traceability Demo</small></div>
             <div class="divider"></div>
             <div class="col">
               <label class="label">Company</label>
@@ -547,28 +1155,45 @@ let state = load() || seed;
               <input id="loginPwd" class="input" type="password" placeholder="Enter: 123" />
               <div class="row">
                 <button id="loginBtn" class="btn btn-brand">Sign in</button>
-                <button id="seedReset" class="btn">Reset Demo Data</button>
+                <button id="seedReset" class="btn">Reset Data</button>
+              </div>
+              <div class="row" style="gap:.5rem;margin-top:.5rem;align-items:center;flex-wrap:wrap;">
+                <label class="label small" for="vpThemeSelect" style="margin:0 .25rem 0 0;">Theme</label>
+                <select id="vpThemeSelect" class="input" style="max-width:160px;">
+                  <option value="dark">Dark</option>
+                  <option value="light">Light</option>
+                  <option value="light-warm">Warm Light</option>
+                  <option value="emerald">Emerald</option>
+                </select>
+                <label class="label small" for="vpDensitySelect" style="margin:0 .25rem 0 .75rem;">Density</label>
+                <select id="vpDensitySelect" class="input" style="max-width:140px;">
+                  <option value="comfort">Comfort</option>
+                  <option value="compact">Compact</option>
+                </select>
               </div>
             </div>
           </div>
-          <div class="card" style="grid-column:2 / span 1">
-            <div class="section-title">Demo Features</div>
-            <ul class="small">
-              <li><strong>Purchase Orders:</strong> See the flow from importer → processor → coop</li>
-              <li><strong>Label Management:</strong> Upload, review, and approve product labels</li>
-              <li><strong>Traceability:</strong> Track products from farm to consumer</li>
-              <li><strong>Logistics:</strong> Coordinate shipments with providers</li>
-              <li><strong>Compliance:</strong> Manage certifications and documents</li>
-              <li><strong>VERI Tokens:</strong> Reward system for compliance</li>
-            </ul>
-          </div>
+          
+          <div class="card" id="loginPromo" style="grid-column:2 / span 1"><div class="section-title">Import trust in seconds</div><ul class="promo-list">
+              <li><strong>$40B</strong> lost annually to food fraud; <strong>600M</strong> people fall ill and <strong>420K</strong> die from unsafe food.</li>
+              <li><strong>30+ documents</strong> per EU shipment — errors cause costly delays and rework.</li>
+              <li><strong>VeriPura</strong> automates document checks with AI and locks the chain of custody on blockchain.</li>
+              <li><strong>Traceback in ~2 seconds</strong> with on-chain records (vs. 7 days with paper trails).</li>
+            </ul><p class="promo-cta">Replace paper friction with digital trust.</p></div>
+
         </div>
+          </div>
+</div>
+
       </div>
     `;
     const companySel = $('#loginCompany');
     state.companies.forEach(c=>{
       const o = document.createElement('option'); o.value=c.id; o.textContent = `${c.name} — ${c.type}`; companySel.appendChild(o);
-    });
+  try{ renderThemeControls(); }catch(e){}
+  try{ window.__wireLoginAppearance && window.__wireLoginAppearance(); }catch(e){}
+  try{ window.__wireLoginPromo && window.__wireLoginPromo(); }catch(e){}
+});
     function populateUsers(){
       const companyId = companySel.value;
       const users = (state.users || []).filter(u=>u.companyId === companyId);
@@ -731,6 +1356,7 @@ let state = load() || seed;
       });
     });
     renderDashboard();
+    if(window._vpEnforceNavVisibility){ window._vpEnforceNavVisibility(); }
   }
 
   function renderDashboard(){
@@ -741,22 +1367,7 @@ let state = load() || seed;
     const shipped = myPOs.filter(p=>p.status==='Shipped').length;
     const received = myPOs.filter(p=>p.status==='Received').length;
     const completed = myPOs.filter(p=>p.status==='Completed').length;
-    
-    // Demo-specific highlights
-    const demoPOs = myPOs.filter(p => p.id.startsWith('DEMO'));
-    const demoHighlights = demoPOs.map(po => {
-      const buyer = companyById(po.buyerId);
-      const supplier = companyById(po.supplierId);
-      const isMyPO = po.buyerId === me.id ? 'Issued' : 'Received';
-      return `<div class="row" style="gap:.5rem;margin-bottom:.5rem;">
-        <span class="pill">${po.id}</span>
-        <span class="small">${isMyPO}: ${escapeHTML(buyer.name)} → ${escapeHTML(supplier.name)}</span>
-        <span class="tag ${po.status==='Completed'?'ok':po.status==='Shipped'?'ok':po.status==='Open'?'warn':'warn'}">${po.status}</span>
-      </div>`;
-    }).join('');
-    
     const _me_guard = ensureSessionCompany(); if(!_me_guard) return; $('#tab-dashboard').innerHTML = `
-      <div class="section-title">Dashboard - ${escapeHTML(me.name)} (${escapeHTML(me.type)})</div>
       <div class="grid cols-3">
         <div class="card metric"><div class="h">Open POs</div><div class="v">${open}</div></div>
         <div class="card metric"><div class="h">Ready to Ship</div><div class="v">${rts}</div></div>
@@ -766,12 +1377,8 @@ let state = load() || seed;
       </div>
       <div class="grid cols-2" style="margin-top:1rem">
         <div class="card">
-          <div class="row-between"><div class="section-title">Demo Purchase Orders</div></div>
-          <div style="max-height: 300px; overflow-y: auto;">
-            ${demoHighlights || '<div class="muted small">No demo POs visible for your company.</div>'}
-          </div>
-          <div class="divider"></div>
-          <div class="small muted">These are the key demo POs showing the supply chain flow. Check the Purchase Orders tab for full details and actions.</div>
+          <div class="row-between"><div class="section-title">Recent Activity</div></div>
+          <div id="dash-activity" class="small muted">Actions you take (PO approvals, shipments, wallet ops) will appear here.</div>
         </div>
         <div class="card">
           <div class="section-title">Your Company</div>
@@ -781,12 +1388,7 @@ let state = load() || seed;
             <span class="chip">Balance: <strong id="dashBalance">${getBalance(me.id)}</strong> VERI</span>
           </div>
           <div class="divider"></div>
-          <div class="small muted">
-            <strong>Demo Instructions:</strong><br>
-            • <strong>Importer:</strong> Review and approve POs, manage labels<br>
-            • <strong>Processor:</strong> Process orders, source materials, coordinate shipments<br>
-            • <strong>Coop:</strong> Supply raw materials, maintain certifications
-          </div>
+          <div class="small muted">Invitations visible to operational roles only; Business Partners excludes yourself. Wallet transfers mirror PO relationship policy.</div>
         </div>
       </div>
     `;
@@ -808,7 +1410,7 @@ let state = load() || seed;
     const meType = typeOf(session.companyId);
     const r = session.role;
     if(meType==='Importer') return r==='Procurement Manager';
-    if(meType==='Processor') return r==='Export Manager' || r==='Sales/Account Manager';
+    if(meType==='Processor') return r==='Export Manager' || r==='Account Manager';
     if(meType==='Coop') return r==='Sales Manager';
     return false;
   }
@@ -878,11 +1480,10 @@ let state = load() || seed;
     $$('#partnersTable .btn-invite').forEach(btn=>{
       btn.addEventListener('click',()=>{
         const targetId = btn.dataset.id;
-        if(!isAllowedPair(session.companyId,targetId)){ toast('Not a permitted relationship.','err'); return; }
+        if(!isAllowedPair(session.companyId, targetId)){ toast('Not a permitted relationship.','err'); return; }
         if(!canInviteFromRole()){ toast('Your role cannot send invitations.','err'); return; }
         const inv = {id: 'I'+Math.random().toString(36).slice(2,8), fromCompanyId:session.companyId, fromRole:session.role, toCompanyId:targetId, toType:typeOf(targetId), status:'Pending', createdAt:now()};
-        state.invitations.push(inv); save(); toast('Invitation sent.');
-        renderPartners();
+        state.invitations.push(inv); save(); toast('Invitation sent.'); renderPartners();
       });
     });
   }
@@ -1003,7 +1604,7 @@ let state = load() || seed;
     $('#walletChip').textContent = 'VERI: ' + getBalance(session.companyId);
     const db = $('#dashBalance'); if(db) db.textContent = getBalance(session.companyId);
   }
-  function canWalletAdmin(){ return session.role==='Finance/Wallet Admin'; }
+  function canWalletAdmin(){ return session.role==='Finance / Wallet Admin'; }
   function renderWallet(){
     const me = companyById(session.companyId);
     const w = walletFor(me.id);
@@ -1112,22 +1713,20 @@ let state = load() || seed;
   function roleCanSendPO(){
     const t = typeOf(session.companyId);
     if(t==='Importer' && session.role==='Procurement Manager') return true;
-    if(t==='Processor' && (session.role==='Sales/Account Manager' || session.role==='Procurement Manager' || session.role==='Export Manager')) return true;
-    if(t==='Coop' && session.role==='Sales Manager') return true;
+    if(t==='Processor' && (session.role==='Export Manager' || session.role==='Account Manager')) return true;
     return false;
   }
   function roleCanApprove(po){
     const meType = typeOf(session.companyId);
     if(po.buyerId===session.companyId){
       if(meType==='Importer' && session.role==='Procurement Manager') return true;
-      if(meType==='Processor' && (session.role==='Sales/Account Manager' || session.role==='Export Manager')) return true;
-      if(meType==='Coop' && session.role==='Sales Manager') return true;
+      if(meType==='Processor' && session.role==='Account Manager') return true;
     }
     return false;
   }
   function roleCanRequestQA(){
     const t = typeOf(session.companyId);
-    return (t==='Importer' && session.role==='QA Manager') || (t==='Processor' && session.role==='Quality Manager');
+    return (t==='Importer' && session.role==='QA / Label Manager') || (t==='Processor' && session.role==='Quality Manager');
   }
   function roleCanRecordQA(){
     const t = typeOf(session.companyId);
@@ -1136,11 +1735,11 @@ let state = load() || seed;
   function roleCanAddShipment(po){
     const meType = typeOf(session.companyId);
     if(po.supplierId===session.companyId){
-      if(meType==='Processor' && (session.role==='Logistics Manager' || session.role==='Production Manager' || session.role==='Export Manager')) return true;
-      if(meType==='Coop' && (session.role==='Sales Manager' || session.role==='Logistics Coordinator')) return true;
+      if(meType==='Processor' && (session.role==='Logistics Manager' || session.role==='Production Manager')) return true;
+      if(meType==='Coop' && (session.role==='Sales Manager' || session.role==='Operations Manager')) return true;
     }
     if(po.buyerId===session.companyId){
-      if(meType==='Importer' && session.role==='Logistics Manager') return true;
+      if(meType==='Importer' && session.role==='Logistics Coordinator') return true;
       if(meType==='Processor' && session.role==='Logistics Manager') return true;
     }
     return false;
@@ -1155,7 +1754,10 @@ let state = load() || seed;
 
   function wirePOCardActions(){
     const container = document.getElementById('tab-pos');
-    if(!container) return;
+    if (!container) return;
+
+    if (container.dataset.wired === '1') return;
+    container.dataset.wired = '1';
 
     container.addEventListener('click', (ev) => {
       const btn = ev.target.closest('button');
@@ -1178,45 +1780,18 @@ let state = load() || seed;
         return;
       }
       if(cl.contains('btn-label-accept')){
-        po.labelStatus='Accepted'; 
-        po.thread.push({author: session.companyId+':'+session.role, msg: 'Label accepted by QA team', ts: now()});
-        save(); toast('Label accepted.');
+        po.labelStatus='Accepted'; save(); toast('Label accepted.');
         renderPOs();
-        return;
-      }
-      if(cl.contains('btn-label-upload')){
-        const input = document.getElementById('label-file-'+id);
-        const file = input && input.files && input.files[0];
-        if(!file) return toast('Select a file first.','warn');
-        processPDFForPO(file, po).then((success) => {
-          if(success) {
-            po.labelStatus = 'Pending Review';
-            po.thread.push({author: session.companyId+':'+session.role, msg: `Label uploaded: ${escapeHTML(file.name)}`, ts: now()});
-            if (!po.labelHistory) po.labelHistory = [];
-            po.labelHistory.push({
-              id: 'LBL_UPL' + Date.now(),
-              action: 'uploaded',
-              actor: session.companyId + ':' + session.role,
-              timestamp: now(),
-              version: po.labelHistory.length + 1,
-              fileName: file.name
-            });
-            save();
-            renderPOs();
-          }
-        });
         return;
       }
       if(cl.contains('btn-approve')){
         if(!roleCanApprove(po)) return;
-        po.status='Approved'; 
-        po.thread.push({author: session.companyId+':'+session.role, msg: 'Purchase order approved', ts: now()});
-        save(); toast('PO approved.');
+        po.status='Approved'; save(); toast('PO approved.');
         renderPOs();
         return;
       }
       if(cl.contains('btn-ship')){
-        if(po.labelStatus!=='Accepted' && po.labelStatus!=='Not Required') return toast('Blocking: Label not accepted. Use Override + note to proceed.','err');
+        if(po.labelStatus!=='Accepted') return toast('Blocking: Label not accepted. Use Override + note to proceed.','err');
         const qty = po.items.reduce((a,it)=>a+Number(it.qty||0),0);
         const logisticsProvider = $(`#logistics-${id}`)?.value;
         const carrier = $(`#carrier-${id}`)?.value || 'TBD';
@@ -1277,14 +1852,6 @@ let state = load() || seed;
     const canSend = roleCanSendPO();
     const posReceived = myPOs.filter(p => p.supplierId === me.id);
     const posIssued = myPOs.filter(p => p.buyerId === me.id);
-    
-    // Sort by demo POs first, then by creation date
-    const sortPOs = (pos) => pos.sort((a, b) => {
-      if (a.id.startsWith('DEMO') && !b.id.startsWith('DEMO')) return -1;
-      if (!a.id.startsWith('DEMO') && b.id.startsWith('DEMO')) return 1;
-      return (b.createdAt || '').localeCompare(a.createdAt || '');
-    });
-    
     $('#tab-pos').innerHTML = `
       <div class="row-between">
         <div class="section-title">Purchase Orders</div>
@@ -1298,7 +1865,7 @@ let state = load() || seed;
               <span class="muted small">Orders from customers to us</span>
             </div>
             <div class="col" id="posReceivedList">
-              ${sortPOs(posReceived).map(poCard).join('')}
+              ${posReceived.map(poCard).join('')}
             </div>
           </div>
         ` : ''}
@@ -1309,7 +1876,7 @@ let state = load() || seed;
               <span class="muted small">Orders from us to suppliers</span>
             </div>
             <div class="col" id="posIssuedList">
-              ${sortPOs(posIssued).map(poCard).join('')}
+              ${posIssued.map(poCard).join('')}
             </div>
           </div>
         ` : ''}
@@ -1329,9 +1896,11 @@ let state = load() || seed;
   }
 
   function poCard(p){
-    const buyer = companyById(p.buyerId), supplier = companyById(p.supplierId);
+    
+  ensureTrace(p);
+const buyer = companyById(p.buyerId), supplier = companyById(p.supplierId);
     const alerts = [];
-    if(p.labelStatus!=='Accepted' && p.labelStatus!=='Not Required') alerts.push(`<span class="tag block">Label: ${p.labelStatus}</span>`);
+    if(p.labelStatus!=='Accepted') alerts.push('<span class="tag block">Label not accepted</span>');
     if(p.rewards && (p.rewards.organic || p.rewards.fairTrade || p.rewards.rainforest)) alerts.push('<span class="tag warn">Compliance awards pending</span>');
     const gmp = state.certs.find(c=>c.companyId===p.supplierId && c.type==='GMP');
     if(!gmp) alerts.push('<span class="tag warn">Processor GMP missing/expired</span>');
@@ -1342,19 +1911,14 @@ let state = load() || seed;
     }
     const traceVisible = ['ReadyToShip','Shipped','Received','Completed'].includes(p.status);
     const logisticsDropdown = roleCanAddShipment(p) ? renderLogisticsProviderDropdown(session.companyId, `logistics-${p.id}`) : '';
-    
-    // Demo indicator
-    const demoFlag = p.id.startsWith('DEMO') ? '<span class="tag ok" style="background:var(--brand);color:white;">DEMO</span>' : '';
-    
     return `
       <div class="accordion-item">
         <div class="accordion-head">
           <div class="row" style="gap:.75rem">
             <span class="pill">${escapeHTML(p.id)}</span>
-            ${demoFlag}
-            <strong>${escapeHTML(buyer.name)} → ${escapeHTML(supplier.name)}</strong>
+            <strong>${escapeHTML(counterpartyName(p))}</strong>
             <span class="muted small">Status: ${escapeHTML(p.status)}</span>
-            <span class="small">Label: <span class="tag ${p.labelStatus==='Accepted'?'ok':p.labelStatus==='Pending Review'?'warn':p.labelStatus==='Requested'?'warn':p.labelStatus==='Not Required'?'ok':'block'}">${p.labelStatus}</span></span>
+            <span class="small">Label: <span class="tag ${p.labelStatus==='Accepted'?'ok':p.labelStatus==='Pending Review'?'warn':p.labelStatus==='Requested'?'warn':'block'}">${p.labelStatus}</span></span>
             <span class="small">Total: <strong>${p.total.toFixed(2)} ${escapeHTML(p.currency)}</strong></span>
             <span class="row" style="gap:.35rem">${alerts.join(' ')}</span>
           </div>
@@ -1364,27 +1928,17 @@ let state = load() || seed;
           <div class="grid cols-2">
             <div class="col">
               <div class="section-title">Thread</div>
-              <div class="card" id="thread-${p.id}" style="max-height:200px;overflow-y:auto;">${p.thread.map(t=>`<div class="row" style="gap:.5rem;margin-bottom:.5rem;"><span class="pill">${escapeHTML(t.author)}</span><span class="small">${escapeHTML(t.msg)}</span><span class="muted small right">${t.ts}</span></div>`).join('')}</div>
+              <div class="card" id="thread-${p.id}">${p.thread.map(t=>`<div class="row" style="gap:.5rem"><span class="pill">${escapeHTML(t.author)}</span><span class="small">${escapeHTML(t.msg)}</span><span class="muted small right">${t.ts}</span></div>`).join('')}</div>
               <div class="inline-form" style="margin-top:.5rem">
                 <input class="input" id="msg-${p.id}" placeholder="Add message..." />
                 <button class="btn btn-primary btn-post" data-id="${p.id}">Post</button>
               </div>
               <div class="divider"></div>
-              <div class="section-title">QA & Label Management</div>
-              <div class="col" style="gap:.5rem;">
-                ${roleCanRequestQA() && p.labelStatus === 'Requested' ? `
-                  <button class="btn btn-ok btn-label-accept" data-id="${p.id}">✅ Mark Label Accepted</button>
-                ` : ''}
-                ${roleCanRecordQA() && (p.labelStatus === 'Requested' || p.labelStatus === 'Rejected') ? `
-                  <div class="inline-form">
-                    <input class="input" type="file" id="label-file-${p.id}" accept="application/pdf" />
-                    <button class="btn btn-primary btn-label-upload" data-id="${p.id}">Upload Label</button>
-                  </div>
-                ` : ''}
-                ${p.labelStatus === 'Pending Review' ? `
-                  <div class="small muted">Label uploaded, awaiting QA review...</div>
-                ` : ''}
-                <span class="muted small">Label Status: <strong>${p.labelStatus}</strong></span>
+              <div class="section-title">QA & Label</div>
+              <div class="row" style="flex-wrap:wrap;gap:.5rem">
+                <button class="btn btn-primary btn-req-qa ${roleCanRequestQA()?'':'hidden'}" data-id="${p.id}">Request Testing</button>
+                <button class="btn btn-ok btn-label-accept ${roleCanRequestQA()?'':'hidden'}" data-id="${p.id}">Mark Label Accepted</button>
+                <span class="muted small">QA Results can be recorded by Processor Quality Manager or Coop QA Liaison.</span>
               </div>
             </div>
             <div class="col">
@@ -1427,7 +1981,9 @@ let state = load() || seed;
     `;
   }
   function renderTrace(p){
-    let html = '';
+    
+  ensureTrace(p);
+let html = '';
     if(p.trace && Object.keys(p.trace).length > 0) {
       const t = p.trace;
       const lots = (t.lots||[]).map(l=>`<span class="pill">${escapeHTML(l.id)}: ${l.qty}</span>`).join(' ');
@@ -1575,7 +2131,7 @@ let state = load() || seed;
       const msg = $('#poMsg').value.trim();
       const po = {
         id, buyerId: session.companyId, supplierId, currency, items, total, status:'Open', labelStatus:'Requested',
-        rewards, docChecklist:[], docs:[], thread:[], shipments:[], trace:{}, createdAt: now()
+        rewards, docChecklist:[], docs:[], thread:[], shipments:[], trace:{ lots:[{id:'LOT-A',qty:600},{id:'LOT-B',qty:600}], chain:['C_COO1','C_PRO','C_IMP'], geo:'16.07,102.67 → 13.75,100.50 → 52.37,4.90' }, createdAt: now()
       };
       if(msg) po.thread.push({author: session.companyId+':'+session.role, msg: escapeHTML(msg), ts: now()});
       save();
@@ -1599,8 +2155,7 @@ let state = load() || seed;
 
   function wireSysAdminHandlers(){
     const container = document.getElementById('tab-sysadmin');
-    if(!container || container.dataset.wired === '1') return;
-    container.dataset.wired = '1';
+    if(!container) return;
     container.addEventListener('click', (ev) => {
         const target = ev.target;
         if(target.matches('.admin-tabs button')){
@@ -1952,7 +2507,7 @@ let state = load() || seed;
   }
   
   function canManageDocuments(){
-    const allowedRoles = ['QA Manager', 'Logistics Manager', 'Logistics Coordinator', 'Sys Admin'];
+    const allowedRoles = ['QA / Label Manager', 'Logistics Coordinator', 'Sys Admin'];
     return allowedRoles.includes(session.role);
   }
   function canViewDocuments(){
@@ -2284,11 +2839,1206 @@ let state = load() || seed;
     toast(`Document attached to PO ${poId}`);
   }
 
-  // Load session and start the app
-  loadSession();
+  // Always start with login screen
   renderLogin();
 
 })();
 </script>
+
+<script>
+(function(){
+  'use strict';
+
+  // === Helpers to detect session + company type ===
+  const TAB_IDS = ['dashboard','pos','documents','wallet','partners','invitations','sysadmin'];
+  const THEME_KEY='vp_theme', DENSITY_KEY='vp_density';
+
+  function getSession(){
+    try{ 
+       return window.session || JSON.parse(localStorage.getItem('vp_session')||'{}'); 
+     } catch(e) { 
+       console.warn('Session data unavailable:', e);
+      return {}; 
+     }
+  }
+  function getState(){ 
+     const state = window.state || {};
+     if (!state.companies) state.companies = [];
+     if (!state.users) state.users = [];
+     if (!state.pos) state.pos = [];
+     if (!state.products) state.products = [];
+    return state;
+  }
+  function companyById(id){ const s=getState(); return (s.companies||[]).find(c=>c.id===id) || {}; }
+  function companyType(c){
+    const type=(c?.type||'').toLowerCase();
+    if(type) return type;
+    const name=(c?.name||'').toLowerCase();
+    if(/coop|co-op|farmer/.test(name)) return 'coop';
+    if(/importer/.test(name)) return 'importer';
+    return 'processor';
+  }
+
+  // === Your approved visibility rules (S2/F1/L1) ===
+  // === CONSOLIDATED TAB RULES (source of truth: TAB_RULES from JSON) ===
+const RULES = {
+  importer: TAB_RULES.Importer || {},
+  processor: TAB_RULES.Processor || {},
+  coop: TAB_RULES.Coop || {}
+};
+
+  // === Apply tab visibility after renderApp builds the UI ===
+  
+function applyTabVisibility(){
+  try{
+    // Resolve context
+    const ctx = (typeof _vpCurrentContext === 'function') ? _vpCurrentContext() : {companyType:null, role:null};
+    // Pull rule from unified source of truth
+    let rule = null;
+    if (ctx.companyType && ctx.role) {
+      // Prefer TAB_RULES (arrays of tab names)
+      const map = (typeof TAB_RULES !== 'undefined') ? TAB_RULES[ctx.companyType] : null;
+      if (map && map[ctx.role]) rule = map[ctx.role];
+      // Fallback: legacy RULES shape ({show,hide})
+      if (!rule && typeof RULES !== 'undefined') {
+        const legacyMap = RULES[(ctx.companyType||'').toLowerCase()] || RULES[ctx.companyType];
+        if (legacyMap) rule = legacyMap[ctx.role];
+      }
+    }
+
+    // Normalize rule -> {allowed:Set, denied:Set}
+    let allowed = new Set();
+    let denied = new Set();
+
+    if (Array.isArray(rule)) {
+      allowed = new Set(rule);
+    } else if (rule && typeof rule === 'object') {
+      allowed = new Set(rule.show || []);
+      denied = new Set(rule.hide || []);
+    } else {
+      // No rule? Strict deny.
+      allowed = new Set();
+    }
+
+    // Determine tab ids from DOM if TAB_IDS not available
+    let ids = (typeof TAB_IDS !== 'undefined' && Array.isArray(TAB_IDS)) ? TAB_IDS.slice() : [];
+    if (ids.length === 0) {
+      ids = Array.from(document.querySelectorAll('.nav button[data-tab]')).map(b=>b.getAttribute('data-tab'));
+      if (ids.length === 0) {
+        ids = Array.from(document.querySelectorAll('.nav button')).map(b => (b.textContent||'').trim());
+      }
+    }
+
+    const nav = document.querySelector('.nav');
+    if (!nav) return;
+
+    ids.forEach(id => {
+      const btn = nav.querySelector(`button[data-tab="${id}"]`) || Array.from(nav.querySelectorAll('button')).find(b => (b.textContent||'').trim() === id);
+      if (!btn) return;
+
+      // If we have explicit deny, obey it. Otherwise, if allowed set present, obey it.
+      let shouldShow = true;
+      if (denied.size > 0) {
+        shouldShow = !denied.has(id);
+      }
+      if (allowed.size > 0) {
+        shouldShow = allowed.has(id);
+      }
+
+      btn.style.display = shouldShow ? '' : 'none';
+      btn.classList.toggle('hidden', !shouldShow);
+    });
+
+  }catch(e){
+    console.warn('applyTabVisibility error:', e);
+  }
+}
+)[role]; 
+  // === KPI cards on Dashboard (role-aware by company type) ===
+  function computeKPIs(){
+    const {pos=[], users=[], products=[]} = getState();
+    const now=new Date(), y=now.getFullYear();
+    const ytdPOs = pos.filter(p=> (new Date(p.createdAt||now)).getFullYear()===y );
+    const shipped = ytdPOs.filter(p=> /shipped|received|completed/i.test(p.status||''));
+    const rejectedProducts = (products||[]).filter(x=> x.rejected===true || /rejected/i.test(x?.status||''));
+    const totalProducts = (products||[]).length || 1;
+    return {
+      importer: {
+        k1:{label:'YTD POs Issued', value:ytdPOs.length},
+        k2:{label:'YTD POs Shipped', value:shipped.length},
+        k3:{label:'YTD Products Rejected', value: Math.round((rejectedProducts.length/totalProducts)*100), unit: '%'}
+      },
+      processor: {
+        k1:{label:'Supplier Doc On-Time', value: estimatePct('docOnTime', 92), unit: '%' },
+        k2:{label:'First-Pass QA Pass', value: estimatePct('qaPass', 96), unit: '%' },
+        k3:{label:'Ready-to-Ship Backlog', value: pos.filter(p=> /readytoship/i.test(p.status||'')).length }
+      },
+      coop: {
+        k1:{label:'Docs On-Time', value: estimatePct('docOnTime', 94), unit: '%' },
+        k2:{label:'QA Pass', value: estimatePct('qaPass', 98), unit: '%' },
+        k3:{label:'VERI Earned (30d)', value: estimateSum('veri30d') }
+      }
+    };
+    function estimatePct(kind, base){ return (base + Math.floor(Math.random()*6)); }
+    function estimateSum(kind){ return  Math.floor(100+Math.random()*400); }
+  }
+
+  function injectDashboardKPIs(){
+    const dash=document.getElementById('tab-dashboard'); 
+    if(!dash) {
+      console.warn('Dashboard tab not found');
+      return;
+    }
+    const sess=getSession(); const comp=companyById(sess.companyId); const type=companyType(comp);
+    const kpis=computeKPIs()[type] || {};
+    let wrap=dash.querySelector('#kpiRow'); if(wrap) wrap.remove();
+    wrap=document.createElement('div'); wrap.id='kpiRow';
+    wrap.className='grid cols-3'; wrap.style.margin='0 0 .75rem 0';
+    ['k1','k2','k3'].forEach(key=>{
+      const k=kpis[key] || {label:'—',value:'—'};
+      const card=document.createElement('div'); card.className='card metric';
+      card.innerHTML = `
+        <div class="h">${k.label}</div>
+        <div class="v">${k.value}${k.unit||''}</div>
+      `;
+      wrap.appendChild(card);
+    });
+    dash.prepend(wrap);
+  }
+
+  // === Sys Admin sub-menus with content ===
+  function buildSysAdmin(){
+    const tab=document.getElementById('tab-sysadmin'); 
+    if(!tab) {
+      console.warn('SysAdmin tab not found');
+      return;
+    }
+    tab.innerHTML = `
+      <div class="admin-tabs">
+          <button data-sub="security" class="active">Security Center</button>
+          <button data-sub="interface">Interface Management</button>
+          <button data-sub="audit">Audit & Compliance</button>
+      </div>
+      <div id="sysSub"></div>
+    `;
+    const sub = tab.querySelector('#sysSub');
+    function render(which){
+      tab.querySelectorAll('button[data-sub]').forEach(b=> b.classList.toggle('active', b.dataset.sub===which));
+      if(which==='security') renderSecurity(sub);
+      if(which==='interface') renderInterface(sub);
+      if(which==='audit') renderAudit(sub);
+    }
+    tab.querySelectorAll('button[data-sub]').forEach(b=> b.onclick = ()=> render(b.dataset.sub));
+    render('security');
+  }
+  
+  function updateAuditTable(container, filteredLogs) {
+    const tbody = container.querySelector('tbody');
+    if (!tbody) return;
+    tbody.innerHTML = filteredLogs.map(log => `
+      <tr>
+        <td>${escapeHTML(log.ts)}</td><td>${escapeHTML(log.actor)}</td>
+        <td>${escapeHTML(log.action)}</td>
+        <td>${escapeHTML(JSON.stringify(Object.fromEntries(Object.entries(log).filter(([k])=>!['ts','actor','action'].includes(k)))))}</td>
+      </tr>`).join('');
+  }
+  function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+      const later = () => {
+        clearTimeout(timeout);
+        func(...args);
+      };
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+    };
+  }
+
+  function renderSecurity(root){
+    const s=getState(), users=s.users||[], invites=s.invitations||[];
+    const failed = (s.securityEvents||[]).filter(e=>e.type==='failed_login').length;
+    const suspended=(users.filter(u=>/suspended/i.test(u.status||'')).length);
+    root.innerHTML = `
+      <div class="grid cols-4">
+        <div class="card metric"><div class="h">Active Users</div><div class="v">${users.length - suspended}</div></div>
+        <div class="card metric"><div class="h">Suspended</div><div class="v">${suspended}</div></div>
+        <div class="card metric"><div class="h">Failed Logins (24h)</div><div class="v">${failed}</div></div>
+        <div class="card metric"><div class="h">Pending Invites</div><div class="v">${(invites.filter(i=>/sent|pending/i.test(i.status||'')).length)||0}</div></div>
+      </div>
+      <div class="card" style="margin-top:.5rem">
+        <div class="section-title">Users & Roles</div>
+        <div class="table small" id="tblUsers"></div>
+      </div>
+      <div class="card" style="margin-top:.5rem">
+        <div class="section-title">Invitations</div>
+        <div class="table small" id="tblInvites"></div>
+      </div>
+      <div class="card" style="margin-top:.5rem">
+        <div class="section-title">Access Policies</div>
+        <div class="row" style="gap:.5rem;
+
+// === Injected sample: Recent Security Events ===
+(function(){
+  const host = document.querySelector('#content .panel') || root;
+  const card = document.createElement('div'); card.className='card';
+  const h = document.createElement('div'); h.className='section-title'; h.textContent='Recent Security Events';
+  const tbl = document.createElement('table'); tbl.className='table';
+  tbl.innerHTML = '<thead><tr><th>When</th><th>Type</th><th>Reason/IP</th><th>User</th></tr></thead><tbody></tbody>';
+  card.appendChild(h); card.appendChild(tbl);
+  host.appendChild(card);
+  const rows = [
+    {ts:'2025-09-09 09:02', type:'failed_login', reason:'Invalid password (203.0.113.15)', user:'C_IMP:User1'},
+    {ts:'2025-09-09 11:17', type:'password_reset', reason:'Requested via email', user:'C_PRO:User2'}
+  ];
+  const tb = tbl.querySelector('tbody');
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.ts}</td><td>${r.type}</td><td>${r.reason}</td><td>${r.user}</td>`;
+    tb.appendChild(tr);
+  });
+})();
+flex-wrap:wrap">
+          <label>Session timeout (mins) <input class="input" style="width:90px" value="60"></label>
+          <label><input type="checkbox" checked> Require re-login on role change</label>
+          <label><input type="checkbox"> 2FA required</label>
+          <label>Allowed email domains <input class="input" placeholder="example.com, acme.org" style="min-width:260px"></label>
+        </div>
+      </div>
+      <div class="card" style="margin-top:.5rem">
+        <div class="section-title">Data Guardrails</div>
+        <div class="row" style="gap:1rem;flex-wrap:wrap">
+          <label><input type="checkbox" checked> Override requires note</label>
+          <label><input type="checkbox" checked> Block approval until Label = Accepted</label>
+          <label><input type="checkbox"> QA required for ReadyToShip</label>
+        </div>
+      </div>
+    `;
+    const tU=root.querySelector('#tblUsers');  
+    tU.innerHTML = `<table><thead><tr><th>Name</th><th>Email</th><th>Company</th><th>Role</th><th>Status</th><th>Last Login</th></tr></thead>
+      <tbody>${users.map(u=>`<tr><td>${u.name||''}</td><td>${u.email||''}</td><td>${(companyById(u.companyId).name||'')}</td><td>${u.role||''}</td><td>${u.status||''}</td><td>${u.lastLogin||'—'}</td></tr>`).join('')}</tbody></table>`;
+    const tI=root.querySelector('#tblInvites');
+    tI.innerHTML = `<table><thead><tr><th>To Company</th><th>Role</th><th>Sent</th><th>Status</th></tr></thead>
+      <tbody>${(invites||[]).map(i=>`<tr><td>${companyById(i.toCompanyId).name||''}</td><td>${i.toType||''}</td><td>${i.createdAt||'—'}</td><td>${i.status||''}</td></tr>`).join('')}</tbody></table>`;
+  }
+
+  function renderInterface(root){
+    const theme = (document.documentElement.getAttribute('data-theme') || localStorage.getItem(THEME_KEY) || 'dark');
+    const density = (document.documentElement.getAttribute('data-density') || localStorage.getItem(DENSITY_KEY) || 'comfort');
+    root.innerHTML = `
+      <div class="grid cols-2">
+        <div class="card">
+          <div class="section-title">Branding</div>
+          <div class="row" style="gap:.5rem;
+
+// === Injected sample: Interface Activity ===
+(function(){
+  const host = document.querySelector('#content .panel') || root;
+  const card = document.createElement('div'); card.className='card';
+  const h = document.createElement('div'); h.className='section-title'; h.textContent='Interface Activity';
+  const tbl = document.createElement('table'); tbl.className='table';
+  tbl.innerHTML = '<thead><tr><th>When</th><th>Type</th><th>Detail</th></tr></thead><tbody></tbody>';
+  card.appendChild(h); card.appendChild(tbl);
+  host.appendChild(card);
+  const rows = [
+    {ts:'2025-09-09 10:00', type:'webhook', detail:'po.updated → https://hooks.demo/app'},
+    {ts:'2025-09-09 10:05', type:'api_key', detail:'Created key ending …7F3C'}
+  ];
+  const tb = tbl.querySelector('tbody');
+  rows.forEach(r=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${r.ts}</td><td>${r.type}</td><td>${r.detail}</td>`;
+    tb.appendChild(tr);
+  });
+})();
+flex-wrap:wrap">
+            <label>Company display name <input class="input" placeholder="Display name"></label>
+            <label>Primary color <input class="input" placeholder="#16a34a"></label>
+            <button class="btn small">Upload logo</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">Themes & Density</div>
+          <div class="row" style="gap:.5rem;flex-wrap:wrap">
+            <label>Default theme 
+              <select id="ifTheme" class="input" style="width:160px">
+                <option value="dark">Dark</option><option value="light">Light</option>
+                <option value="light-warm">Warm Light</option><option value="emerald">Emerald</option>
+              </select>
+            </label>
+            <label>Default density 
+              <select id="ifDensity" class="input" style="width:140px">
+                <option value="comfort">Comfort</option><option value="compact">Compact</option>
+              </select>
+            </label>
+            <label><input id="ifAllowOverride" type="checkbox" checked> Allow user override</label>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:.5rem">
+        <div class="section-title">Tabs by Role (visibility matrix)</div>
+        <div id="matrixNote" class="muted small" style="margin-bottom:.25rem">Preloaded with your approved S2/F1/L1 rules. (This screen is a visual reference; changes are not persisted in this demo.)</div>
+        <div id="roleMatrix" class="table small"></div>
+      </div>
+      <div class="card" style="margin-top:.5rem">
+        <div class="section-title">Dashboard KPIs (preview)</div>
+        <div id="kpiPreview"></div>
+      </div>
+    `;
+    root.querySelector('#ifTheme').value = theme;
+    root.querySelector('#ifDensity').value = density;
+    const rows=[];
+    Object.entries(RULES).forEach(([ctype, roles])=>{
+      Object.keys(roles).forEach(role=>{
+        const show=new Set(roles[role].show||[]);
+        rows.push(`<tr><td><span class="pill">${ctype}</span></td><td>${role}</td>`+
+          TAB_IDS.map(id=>`<td>${show.has(id)?'✓':''}</td>`).join('')+`</tr>`);
+      });
+    });
+    root.querySelector('#roleMatrix').innerHTML =
+      `<table><thead><tr><th>Company</th><th>Role</th>${TAB_IDS.map(t=>`<th>${t}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table>`;
+    const container=root.querySelector('#kpiPreview');
+    container.innerHTML = `<div class="grid cols-3" id="kpiPrevRow" style="margin-top:.25rem"></div>`;
+    const r=container.querySelector('#kpiPrevRow');
+    ['importer','processor','coop'].forEach(type=>{
+      const k=computeKPIs()[type];
+      const d=document.createElement('div'); d.className='card';
+      d.innerHTML = `<div class="section-title" style="margin-bottom:.25rem">${type[0].toUpperCase()+type.slice(1)} KPIs</div>
+        <div class="small muted">Preview</div>
+        <ul class="small" style="margin:.25rem 0 0 1rem">
+          <li>${k.k1.label}</li><li>${k.k2.label}</li><li>${k.k3.label}</li>
+        </ul>`;
+      r.appendChild(d);
+    });
+  }
+
+  function renderAudit(root){
+    const auditLog = (getState().auditLog||[]).concat(getState().walletAuditLog||[]).sort((a,b)=>b.ts.localeCompare(a.ts));
+    root.innerHTML = `
+      <div class="card">
+        <div class="row-between">
+            <div class="section-title">Combined Audit Log</div>
+            <button id="exportAuditBtn" class="btn small">Export CSV</button>
+        </div>
+         <div class="row" style="gap:.5rem;
+
+// === Injected sample: Audit & Security Logs ===
+(function(){
+  const host = document.querySelector('#content .panel') || root;
+  const wrap = document.createElement('div'); wrap.className='grid cols-2';
+  // Audit table
+  const cardA = document.createElement('div'); cardA.className='card';
+  cardA.innerHTML = '<div class="row-between"><div class="section-title">Company Audit Log</div><button class="btn small">Export CSV</button></div>';
+  const tblA = document.createElement('table'); tblA.className='table';
+  tblA.innerHTML = '<thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Detail</th></tr></thead><tbody></tbody>';
+  cardA.appendChild(tblA);
+  // Security table
+  const cardB = document.createElement('div'); cardB.className='card';
+  cardB.innerHTML = '<div class="row-between"><div class="section-title">Security Events Log</div><button class="btn small">Export CSV</button></div>';
+  const tblB = document.createElement('table'); tblB.className='table';
+  tblB.innerHTML = '<thead><tr><th>When</th><th>Type</th><th>Reason</th><th>User</th></tr></thead><tbody></tbody>';
+  cardB.appendChild(tblB);
+  wrap.appendChild(cardA); wrap.appendChild(cardB);
+  host.appendChild(wrap);
+  const audit = [
+    {ts:'2025-09-09 10:14', actor:'Sys Admin', action:'Policy change', detail:'Password policy updated'},
+    {ts:'2025-09-09 12:45', actor:'Sys Admin', action:'User suspend', detail:'Suspended C_PRO:VendorUser'}
+  ];
+  const sec = [
+    {ts:'2025-09-09 09:02', type:'failed_login', reason:'Invalid password', user:'C_IMP:User1'},
+    {ts:'2025-09-09 11:17', type:'password_reset', reason:'Requested via email', user:'C_PRO:User2'}
+  ];
+  const tbA = tblA.querySelector('tbody'); audit.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.ts}</td><td>${r.actor}</td><td>${r.action}</td><td>${r.detail}</td>`; tbA.appendChild(tr); });
+  const tbB = tblB.querySelector('tbody'); sec.forEach(r=>{ const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.ts}</td><td>${r.type}</td><td>${r.reason}</td><td>${r.user}</td>`; tbB.appendChild(tr); });
+})();
+flex-wrap:wrap;margin-bottom:.25rem">
+          <input class="input" placeholder="Search text" style="min-width:200px">
+          <select class="input"><option>All types</option><option>Login</option><option>Role Change</option><option>Invitation</option><option>PO</option><option>Label</option><option>QA</option><option>Document</option><option>Wallet</option><option>Override</option></select>
+        </div>
+        <div style="max-height: 400px; overflow-y: auto;">
+        <table class="table small">
+          <thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Details</th></tr></thead>
+          <tbody></tbody>
+        </table>
+        </div>
+      </div>
+    `;
+    updateAuditTable(root, auditLog.length > 0 ? auditLog : demoAudit());
+
+    function demoAudit(){ return [
+      {ts:'2025-08-28 09:14', actor:'J. Smith @ Importer', action:'PO Update', target:'PO-2214', before:{status:'Open'}, after:{status:'Approved'}},
+      {ts:'2025-08-28 09:18', actor:'A. Chan @ Processor', action:'QA Update', target:'PO-2214', after:{QA:'PASS'}},
+      {ts:'2025-08-28 09:20', actor:'M. Rao @ Processor', action:'Label Update', target:'PO-2214', before:{label:'Requested'}, after:{label:'Accepted'}},
+     ];}
+
+    // Add search/filter functionality
+    const searchInput = root.querySelector('input[placeholder="Search text"]');
+    const typeFilter = root.querySelector('select');
+    const filterLogs = debounce(() => {
+      const searchTerm = (searchInput?.value || '').toLowerCase();
+      const selectedType = typeFilter?.value || 'All types';
+        const filtered = (auditLog.length > 0 ? auditLog : demoAudit()).filter(log => {
+        const matchesSearch = !searchTerm || 
+          Object.values(log).some(val => 
+            String(val).toLowerCase().includes(searchTerm)
+          );
+        const matchesType = selectedType === 'All types' || 
+          (log.action || '').toLowerCase().includes(selectedType.toLowerCase());
+        return matchesSearch && matchesType;
+      });
+        updateAuditTable(root, filtered);
+    }, 300);
+    if (searchInput) searchInput.addEventListener('input', filterLogs);
+    if (typeFilter) typeFilter.addEventListener('change', filterLogs);
+  }
+
+  // === Wrap original renderApp / renderDashboard with safety checks ===
+  if (typeof window.renderApp === 'function') {
+    const _renderApp = window.renderApp;
+    window.renderApp = function(){
+      const res = _renderApp.apply(this, arguments);
+      try{ buildSysAdmin(); }catch(e){console.error("SysAdmin build failed:", e)}
+      try{ applyTabVisibility(); }catch(e){console.error("Tab visibility failed:", e)}
+      try{ injectDashboardKPIs(); }catch(e){console.error("KPI inject failed:", e)}
+      return res;
+    };
+  }
+
+  if (typeof window.renderDashboard === 'function') {
+    const _renderDashboard = window.renderDashboard;
+    window.renderDashboard = function(){
+      const res=_renderDashboard.apply(this, arguments);
+      try{ injectDashboardKPIs(); }catch(e){console.error("Dashboard KPI inject failed:", e)}
+      return res;
+    };
+  }
+
+  // Initial pass in case app is already rendered on load
+  
+document.addEventListener('DOMContentLoaded', ()=>{
+  if(document.getElementById('nav')) { // User is logged in
+    try{ applyTabVisibility(); }catch(e){}
+    try{ enforceNavStrict(); }catch(e){}
+    // retry a few times for late renders
+    let n=0; const t=setInterval(()=>{
+      try{ applyTabVisibility(); enforceNavStrict(); }catch(e){}
+      if(++n>10) clearInterval(t);
+    }, 150);
+    if(document.getElementById('tab-sysadmin')) try{ buildSysAdmin(); }catch(e){}
+  }
+// injected sample
+[]
+
+// ---- Inject audit & security logs samples
+try{
+  const panel = document.querySelector('#content');
+  const tables = panel ? panel.querySelectorAll('table') : [];
+  // Company Audit Log (first table)
+  const audit = tables[0];
+  if(audit){
+    const tb = audit.querySelector('tbody') || audit.appendChild(document.createElement('tbody'));
+    if(!tb.children.length){
+      [
+        {ts:'2025-09-09 10:14', actor:'Sys Admin', action:'Policy change', detail:'Password policy updated'},
+        {ts:'2025-09-09 12:45', actor:'Sys Admin', action:'User suspend', detail:'Suspended C_PRO:VendorUser'}
+      ].forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.ts}</td><td>${r.actor}</td><td>${r.action}</td><td>${r.detail}</td>`;
+        tb.appendChild(tr);
+      });
+    }
+  }
+  // Security Events Log (second table)
+  const sec = tables[1];
+  if(sec){
+    const tb2 = sec.querySelector('tbody') || sec.appendChild(document.createElement('tbody'));
+    if(!tb2.children.length){
+      [
+        {ts:'2025-09-09 09:02', type:'failed_login', reason:'Invalid password', user:'C_IMP:User1'},
+        {ts:'2025-09-09 11:17', type:'password_reset', reason:'Requested via email', user:'C_PRO:User2'}
+      ].forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.ts}</td><td>${r.type}</td><td>${r.reason}</td><td>${r.user}</td>`;
+        tb2.appendChild(tr);
+      });
+    }
+  }
+}catch(e){}
+
+
+}// ---- Inject interface activity sample
+try{
+  const panel = document.querySelector('#content');
+  const tbls = panel ? panel.querySelectorAll('table') : null;
+  let table = tbls && tbls[0] ? tbls[0] : null;
+  if(table){
+    const tbody = table.querySelector('tbody') || table.appendChild(document.createElement('tbody'));
+    if(!tbody.children.length){
+      [
+        {ts:'2025-09-09 10:00', type:'webhook', detail:'po.updated → https://hooks.demo/app'},
+        {ts:'2025-09-09 10:05', type:'api_key', detail:'Created key ending …7F3C'}
+      ].forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.ts}</td><td>${r.type}</td><td>${r.detail}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+  }
+}catch(e){}
+
+
+}// ---- Inject sample rows if empty
+try{
+  const panel = document.querySelector('#content');
+  const table = panel && panel.querySelector('h2, .h2, .h3, .card, table') ? panel.querySelectorAll('table')[0] : null;
+  if(table){
+    const tbody = table.querySelector('tbody') || table.appendChild(document.createElement('tbody'));
+    if(!tbody.children.length){
+      [
+        {ts:'2025-09-09 09:02', type:'failed_login', reason:'Invalid password (203.0.113.15)', user:'C_IMP:User1'},
+        {ts:'2025-09-09 11:17', type:'password_reset', reason:'Requested via email', user:'C_PRO:User2'}
+      ].forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${r.ts}</td><td>${r.type}</td><td>${r.reason}</td><td>${r.user}</td>`;
+        tbody.appendChild(tr);
+      });
+    }
+  }
+}catch(e){}
+
+
+}/ injected sample
+[]
+}/ injected sample
+[]
+});
+
+
+})();
+</script>
+
+<script>
+(function(){
+  const THEME_KEY='vp_theme', DENSITY_KEY='vp_density';
+  function getTheme(){ return document.documentElement.getAttribute('data-theme') || 'dark'; }
+  function setTheme(t){ document.documentElement.setAttribute('data-theme', t); try{ localStorage.setItem(THEME_KEY,t);}catch(e){} }
+  function getDensity(){ return document.documentElement.getAttribute('data-density') || 'comfort'; }
+  function setDensity(d){ document.documentElement.setAttribute('data-density', d); try{ localStorage.setItem(DENSITY_KEY,d);}catch(e){} }
+  function wireLoginAppearance(){
+    const themeSel = document.getElementById('vpThemeSelect');
+    const densSel  = document.getElementById('vpDensitySelect');
+    if(!themeSel || !densSel) return;
+    themeSel.value = getTheme();
+    densSel.value  = getDensity();
+    themeSel.onchange = e=> setTheme(e.target.value);
+    densSel.onchange  = e=> setDensity(e.target.value);
+  }
+  // Call after renderLogin runs
+  document.addEventListener('DOMContentLoaded', wireLoginAppearance);
+  // Also expose for manual call after renderLogin if needed
+  window.__wireLoginAppearance = wireLoginAppearance;
+})();
+</script>
+
+
+<script>
+(function(){
+  'use strict';
+  // Role-aware bullets for the login promo card
+  const PROMO = {
+    importer: [
+      "<strong>$40B</strong> lost annually to food fraud; <strong>600M</strong> people fall ill and <strong>420K</strong> die from unsafe food.",
+      "<strong>30+ documents</strong> per EU shipment — errors cause costly delays and rework.",
+      "<strong>Instant origin proof</strong> and EUDR-ready docs; fewer rejections with AI-checked records.",
+      "<strong>Traceback in ~2 seconds</strong> with on-chain records (vs. 7 days with paper trails)."
+    ],
+    processor: [
+      "Automated document checks with <strong>AI</strong> — fewer resubmits and faster approvals.",
+      "Guided <strong>label/QA</strong> compliance; override actions are audited.",
+      "Single source of truth: specs, COAs, and chain of custody are <strong>tamper-proof</strong> on blockchain.",
+      "Earn <strong>VERI tokens</strong> for timely and verified submissions."
+    ],
+    coop: [
+      "Prove <strong>origin & organic</strong> status easily; attach certs from a phone.",
+      "Transparent chain of custody builds a <strong>trust score</strong> with buyers.",
+      "Get paid sooner: complete docs unlock faster approvals.",
+      "Earn <strong>VERI tokens</strong> for on-time, verified documentation."
+    ]
+  };
+
+  function roleFromCompanyText(txt){
+    txt = (txt||'').toLowerCase();
+    if (txt.includes('importer')) return 'importer';
+    if (txt.includes('processor')) return 'processor';
+    if (txt.includes('coop') || txt.includes('co-op') || txt.includes('cooperative')) return 'coop';
+    // default
+    return 'importer';
+  }
+
+  function renderPromoBullets(role){
+    const ul = document.querySelector('#loginPromo .promo-list');
+    if(!ul) return;
+    const items = PROMO[role] || PROMO.importer;
+    ul.innerHTML = items.map(x=> `<li>${x}</li>`).join('');
+  }
+
+  // Wire on login page
+  window.__wireLoginPromo = function(){
+    const comp = document.getElementById('loginCompany');
+    const selTxt = comp && comp.options && comp.options[comp.selectedIndex] ? comp.options[comp.selectedIndex].textContent : '';
+    renderPromoBullets(roleFromCompanyText(selTxt));
+    if (comp) {
+      comp.addEventListener('change', function(){
+        const t = comp.options[comp.selectedIndex].textContent;
+        renderPromoBullets(roleFromCompanyText(t));
+      });
+    }
+  };
+  // If the DOM is ready and we're on the login page, initialize
+  document.addEventListener('DOMContentLoaded', function(){
+    if (document.getElementById('loginPromo')) {
+      try { window.__wireLoginPromo(); } catch(e){}
+    }
+  });
+})();
+
+// Post-render nav enforcement: hide any nav buttons not allowed for this role
+function enforceNavVisibility(){
+  try{
+    const nodes = document.querySelectorAll('.nav button');
+    nodes.forEach(btn => {
+      const label = (btn.textContent||'').trim();
+      if(label){
+        if(!isTabAllowed(label)){
+          btn.style.display = 'none';
+        } else {
+          btn.style.display = '';
+        }
+      }
+    });
+  }catch(e){}
+}
+
+// Try to run after initial render; also observe for subsequent changes
+(function(){
+  const run = ()=>{ enforceNavVisibility(); };
+  setTimeout(run, 0);
+  const nav = document.querySelector('.nav');
+  if(nav && window.MutationObserver){
+    const mo = new MutationObserver(()=> enforceNavVisibility());
+    mo.observe(nav, {childList:true, subtree:true});
+  }
+  window._vpEnforceNavVisibility = enforceNavVisibility;
+})();
+
+
+// Click guard: stop opening tabs not allowed by current role
+
+// Click guard: stop opening tabs not allowed by current role (using canonical data-tab ids)
+document.addEventListener('click', (ev)=>{
+  try{
+    const btn = ev.target.closest('.nav button');
+    if(!btn) return;
+    const id = btn.getAttribute('data-tab') || (btn.textContent||'').trim();
+    const cid = canonTabId(id);
+    const ctx = (typeof _vpCurrentContext === 'function') ? _vpCurrentContext() : {companyType:null, role:null};
+    const map = (ctx.companyType && TAB_RULES[canonCompanyType(ctx.companyType)]) ? TAB_RULES[canonCompanyType(ctx.companyType)] : null;
+    const rule = (map && map[canonRoleName(ctx.role)]) ? map[canonRoleName(ctx.role)] : null;
+    const allowed = Array.isArray(rule) ? new Set(rule.map(canonTabId)) : new Set(((rule && rule.show)||[]).map(canonTabId));
+    if (allowed.size>0 && !allowed.has(cid)){
+      ev.preventDefault();
+      ev.stopPropagation();
+      console.warn('[TAB RULES] Blocked access to tab:', cid);
+      return false;
+    }
+  }catch(e){}
+}, true);
+
+      return false;
+    }
+  }catch(e){}
+}, true);
+
+
+;(() => {
+  const run = () => {
+    try{ if (typeof applyTabVisibility === 'function') applyTabVisibility(); }catch(e){}
+    try{ if (typeof _vpEnforceNavVisibility === 'function') _vpEnforceNavVisibility(); }catch(e) {}
+  };
+  window.addEventListener('load', () => setTimeout(run, 30));
+  const root = document.querySelector('.nav');
+  if (root && window.MutationObserver){
+    const mo = new MutationObserver(run);
+    mo.observe(root, {childList:true, subtree:true});
+  }
+  window._vpApplyTabs = run;
+})();
+
+
+// --- Strict gating driven by TAB_RULES + JSON ---
+function _vpCurrentContextSafe(){
+  try{
+    const sess = (typeof session!=='undefined' && session) ? session
+              : (window.session ? window.session : (state && state.session ? state.session : null));
+    let user = null;
+    if(sess && sess.userId){
+      user = (state.users||[]).find(u=>u.id===sess.userId) || null;
+    } else if (state && state.users && state.users.length){
+      user = state.users.find(u=>u.status==='Active') || state.users[0];
+    }
+    if(!user) return { companyType: null, role: null };
+    const company = (state.companies||[]).find(c=>c.id===user.companyId) || null;
+    return { companyType: company ? company.type : null, role: user.role };
+  }catch(e){ return { companyType: null, role: null }; }
+}
+
+function allowedIdsForContext(){
+  const ctx = _vpCurrentContextSafe();
+  const ct = canonCompanyType(ctx.companyType);
+  const rr = canonRoleName(ctx.role);
+  const map = (ct && TAB_RULES[ct]) ? TAB_RULES[ct] : null;
+  const rule = (map && map[rr]) ? map[rr] : null;
+  const arr = Array.isArray(rule) ? rule : ((rule && rule.show) ? rule.show : []);
+  return new Set(arr.map(canonTabId));
+}
+
+
+
+function enforceNavStrict(){
+  try{
+    const nav = document.getElementById('nav') || document.querySelector('.nav');
+    if(!nav) return;
+    const allowed = allowedIdsForContext();
+    const nodes = Array.from(nav.querySelectorAll('*')).filter(el => {
+      if(!el.textContent) return false;
+      const id = el.getAttribute && el.getAttribute('data-tab');
+      const label = (el.textContent||'').trim();
+      return !!id || ['Dashboard','Purchase Orders','Documents','Wallet','Business Partners','Invitations','Sys Admin','Log out'].includes(label);
+    });
+    nodes.forEach(el => {
+      const id = el.getAttribute && el.getAttribute('data-tab');
+      const label = (el.textContent||'').trim();
+      if(/log out/i.test(label)) return;
+      const cid = canonTabId(id || label);
+      const ok = allowed.size>0 ? allowed.has(cid) : false;
+      el.style.display = ok ? '' : 'none';
+      el.classList.toggle('hidden', !ok);
+    });
+    // fix active
+    const active = nav.querySelector('[data-tab].active, button.active');
+    if(active){
+      const cid = canonTabId(active.getAttribute('data-tab') || active.textContent);
+      if(!allowed.has(cid)){
+        const first = nav.querySelector('[data-tab]:not(.hidden)');
+        if(first) first.click();
+      }
+    }
+  }catch(e){ console.warn('enforceNavStrict error', e); }
+}
+);
+    // Ensure active is valid
+    const active = nav.querySelector('button.active,[data-tab].active');
+    if(active){
+      const cid = canonTabId(active.getAttribute('data-tab') || active.textContent);
+      if(!allowed.has(cid)){
+        const firstAllowed = nodes.find(n => n.style.display !== 'none' && n.getAttribute('data-tab'));
+        if(firstAllowed) firstAllowed.click();
+      }
+    }
+  }catch(e){ console.warn('enforceNavStrict error', e); }
+}
+);
+
+    // Ensure a valid default
+    const remaining = Array.from(nav.querySelectorAll('button[data-tab]'));
+    if(remaining.length>0){
+      const active = nav.querySelector('button.active[data-tab]');
+      const aId = active ? canonTabId(active.getAttribute('data-tab')) : null;
+      const aOk = active ? allowed.has(aId) : false;
+      if(!aOk){
+        remaining[0].click();
+      }
+    }
+  }catch(e){ console.warn('enforceNavStrict error', e); }
+}
+
+// Validator: compare JSON (allowed) vs DOM (present buttons)
+function validateTabs(){
+  const nav = document.querySelector('.nav');
+  if(!nav) return {ok:false, reason:'no nav'};
+  const allowed = allowedIdsForContext();
+  const domIds = new Set(Array.from(nav.querySelectorAll('button[data-tab]')).map(b=>canonTabId(b.getAttribute('data-tab')||b.textContent)));
+  const extra = Array.from(domIds).filter(id => !allowed.has(id));
+  const missing = Array.from(allowed).filter(id => !domIds.has(id));
+  const ctx = _vpCurrentContextSafe();
+  return {ok: extra.length===0 && missing.length===0, ctx, allowed:Array.from(allowed), dom:Array.from(domIds), extra, missing};
+}
+
+// Wire after app render + observe changes
+(function(){
+  const run = ()=>{ enforceNavStrict(); const r=validateTabs(); if(!r.ok){ console.warn('TAB VALIDATION', r); }};
+  window.addEventListener('load', ()=> setTimeout(run, 40));
+  const nav = document.querySelector('.nav');
+  if(nav && window.MutationObserver){
+    const mo = new MutationObserver(()=> run());
+    mo.observe(nav, {childList:true, subtree:true});
+  }
+  window._vpEnforceNavStrict = run;
+})();
+
+// Hotkey: Alt+Shift+V to log validation
+document.addEventListener('keydown', (e)=>{
+  if(e.altKey && e.shiftKey && e.key.toLowerCase()==='v'){
+    const r = validateTabs();
+    console.log('TAB VALIDATION', r);
+  }
+});
+
+
+// --- Robust watcher: re-apply strict gating whenever nav is (re)rendered ---
+(function(){
+  function run(){ try{ if (typeof _vpEnforceNavStrict === 'function') _vpEnforceNavStrict(); }catch(e){} }
+  function startObserver(){
+    const root = document.body || document.documentElement;
+    if(!root || !window.MutationObserver){ run(); return; }
+    const mo = new MutationObserver((list)=>{
+      for(const m of list){
+        if(m.type==='childList'){
+          // Re-apply if .nav appears or its buttons change
+          if([...(m.addedNodes||[])].some(n => n.nodeType===1 && (n.matches?.('.nav') || n.querySelector?.('.nav')))){
+            run();
+            break;
+          }
+        }
+      }
+      // Also poll dom for buttons — if present, enforce
+      if(document.querySelector('.nav button[data-tab]')) run();
+    });
+    mo.observe(root, {childList:true, subtree:true});
+    window._vpNavObserver = mo;
+    // Initial + repeated passes for late renders
+    run();
+    let n=0;
+    const tick = setInterval(()=>{ run(); if(++n>30) clearInterval(tick); }, 200); // ~6s
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', startObserver);
+  } else {
+    startObserver();
+  }
+})();
+
+
+// === Hard Filter: prevent disallowed tabs from being added to nav ===
+(function(){
+  const _append = Element.prototype.appendChild;
+  const _insertBefore = Element.prototype.insertBefore;
+  function block(node){
+    try{
+      const nav = document.getElementById('nav') || document.querySelector('.nav');
+      if(!nav) return false;
+      if(!(node && node.nodeType===1)) return false;
+      // only consider elements under nav
+      const insideNav = node.closest ? (node.closest('#nav, .nav')!=null) : (nav.contains(node));
+      if(!insideNav) return false;
+      const id = node.getAttribute && (node.getAttribute('data-tab') || (node.textContent||'').trim());
+      if(!id) return false;
+      const cid = (typeof canonTabId==='function') ? canonTabId(id) : String(id).toLowerCase();
+      if(cid==='logout') return false;
+      // compute allowed for current context
+      const ctx = (typeof _vpCurrentContextSafe==='function') ? _vpCurrentContextSafe() : (typeof _vpCurrentContext==='function' ? _vpCurrentContext() : {companyType:null,role:null});
+      const ct = (typeof canonCompanyType==='function') ? canonCompanyType(ctx.companyType) : ctx.companyType;
+      const rr = (typeof canonRoleName==='function') ? canonRoleName(ctx.role) : ctx.role;
+      const map = (ct && window.TAB_RULES && TAB_RULES[ct]) ? TAB_RULES[ct] : null;
+      const rule = (map && map[rr]) ? map[rr] : null;
+      const allowed = Array.isArray(rule) ? new Set(rule.map(x=> (typeof canonTabId==='function')?canonTabId(x):x)) 
+                    : new Set(((rule && rule.show)||[]).map(x=> (typeof canonTabId==='function')?canonTabId(x):x));
+      if(allowed.size===0) return true; // strict: block all if no allowed defined
+      return !allowed.has(cid);
+    }catch(e){ return false; }
+  }
+  Element.prototype.appendChild = function(n){
+    try{ if(block(n)) return n; }catch(e){}
+    return _append.call(this, n);
+  };
+  Element.prototype.insertBefore = function(n,ref){
+    try{ if(block(n)) return n; }catch(e){}
+    return _insertBefore.call(this, n, ref);
+  };
+})();
+
+
+// === SysAdmin-only primary nav enforcement ===
+(function(){
+  function roleIsSysAdmin(){
+    try{
+      const ctx = (typeof _vpCurrentContextSafe==='function') ? _vpCurrentContextSafe() : (typeof _vpCurrentContext==='function' ? _vpCurrentContext() : null);
+      if(!ctx) return false;
+      const r = (typeof canonRoleName==='function') ? canonRoleName(ctx.role) : ctx.role;
+      return String(r||'').trim().toLowerCase() === 'sys admin'.toLowerCase();
+    }catch(e){ return false; }
+  }
+
+  function enforceSysAdminOnly(){
+    try{
+      if(!roleIsSysAdmin()) return;
+      const nav = document.getElementById('nav') || document.querySelector('.nav');
+      if(!nav) return;
+      const nodes = Array.from(nav.querySelectorAll('*')).filter(el => el.nodeType===1);
+      nodes.forEach(el => {
+        const txt = (el.textContent||'').trim();
+        const id = el.getAttribute && el.getAttribute('data-tab');
+        const isLogout = /log out/i.test(txt);
+        const isSys = /sys\s*admin/i.test(txt) || (id && id.toLowerCase()==='sysadmin');
+        // hide if it's one of our known tab labels and not Sys Admin or Logout
+        const known = ['Dashboard','Purchase Orders','Documents','Wallet','Business Partners','Invitations','Sys Admin'];
+        const looksLikeTab = (id!=null) || (known.includes(txt));
+        if(looksLikeTab && !isSys && !isLogout){
+          el.style.display = 'none';
+          el.classList.add('hidden');
+        }
+      });
+      // ensure the active tab is Sys Admin if something else was active
+      const active = nav.querySelector('.active');
+      const activeTxt = active ? (active.textContent||'').trim() : '';
+      if(active && !/sys\s*admin/i.test(activeTxt)){
+        const sysBtn = nav.querySelector('[data-tab="sysadmin"]') || Array.from(nav.querySelectorAll('*')).find(el => /sys\s*admin/i.test((el.textContent||'')));
+        if(sysBtn && typeof sysBtn.click==='function') sysBtn.click();
+      }
+    }catch(e){}
+  }
+
+  // Run now and on changes
+  const run = ()=>{ try{ enforceSysAdminOnly(); }catch(e){} };
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run); else run();
+  if(window.MutationObserver){
+    const mo = new MutationObserver(run);
+    mo.observe(document.body || document.documentElement, {childList:true, subtree:true});
+  }
+  window._vpSysAdminOnly = run;
+})();
+
+
+// === Set body data-role/company for CSS enforcement ===
+(function(){
+  function syncRole(){
+    try{
+      const ctx = (typeof _vpCurrentContextSafe==='function') ? _vpCurrentContextSafe() :
+                  (typeof _vpCurrentContext==='function') ? _vpCurrentContext() : {companyType:null, role:null};
+      const body = document.body || document.documentElement;
+      if(!body) return;
+      body.setAttribute('data-role', (typeof canonRoleName==='function') ? canonRoleName(ctx.role) : (ctx.role||''));
+      body.setAttribute('data-company', (typeof canonCompanyType==='function') ? canonCompanyType(ctx.companyType) : (ctx.companyType||''));
+    }catch(e){}
+  }
+  if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded', syncRole); } else { syncRole(); }
+  setTimeout(syncRole, 100);
+  setTimeout(syncRole, 400);
+  setTimeout(syncRole, 1000);
+  if(window.MutationObserver){
+    const mo = new MutationObserver(syncRole);
+    mo.observe(document.body || document.documentElement, {childList:true, subtree:true});
+  }
+  window._vpSyncRole = syncRole;
+})();
+
+</script>
+
+
+<script>
+/* ===== VeriPura SysAdmin: scoped patch (no regressions) ===== */
+(function(){
+  "use strict";
+
+  function q(s,root){ return (root||document).querySelector(s); }
+  function qa(s,root){ return Array.from((root||document).querySelectorAll(s)); }
+  function esc(s){ const m={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}; return String(s||'').replace(/[&<>"']/g,c=>m[c]); }
+  function fmt(ts){ try{ return new Date(ts).toLocaleString(); } catch(e){ return ts||''; } }
+  function state(){ return window.state || (window.state = {}); }
+  function session(){ try{ return window.session || JSON.parse(localStorage.getItem('vp_session')||'{}'); } catch(e){ return window.session || {}; } }
+  function roleIsSysAdmin(){
+    const side = q('aside') || q('aside.sidebar');
+    return side && /Role:\s*Sys\s*Admin/i.test(side.textContent||'');
+  }
+  function companyId(){
+    const s = session(); return s && s.companyId ? s.companyId : null;
+  }
+  function usersForCompany(cid){
+    const st = state(); const users = st.users || [];
+    return users.filter(u=>u.companyId===cid);
+  }
+
+  /* ---------- Left nav: keep Sys Admin + Log out only (Sys Admin role) ---------- */
+  function reduceLeftNav(){
+    if(!roleIsSysAdmin()) return;
+    const side = q('aside') || q('aside.sidebar'); if(!side) return;
+    qa('a,button,[data-tab],.nav-item,[role="button"]', side).forEach(el=>{
+      const raw = (el.getAttribute && (el.getAttribute('data-tab')||'')) || (el.innerText||el.textContent||'');
+      const t = raw.trim().toLowerCase();
+      const keep = /sys\s*admin/.test(t) || /log\s*out|logout/.test(t);
+      // only toggle nav entries; ignore chips and non-clickables
+      if(el.tagName==='A' || el.tagName==='BUTTON' || el.hasAttribute('data-tab') || el.getAttribute('role')==='button' || el.classList.contains('nav-item')){
+        el.style.display = keep ? '' : 'none';
+      }
+    });
+  }
+
+  /* ---------- Auto-open Sys Admin view on load (Sys Admin role) ---------- */
+  function openSysAdminView(){
+    if(!roleIsSysAdmin()) return;
+    // Find the existing "Sys Admin" nav element and click it once
+    const side = q('aside') || q('aside.sidebar');
+    if(!side) return;
+    const target = qa('a,button,[data-tab],.nav-item,[role="button"]', side).find(el=>{
+      const raw = (el.getAttribute && (el.getAttribute('data-tab')||'')) || (el.innerText||el.textContent||'');
+      return /sys\s*admin/i.test((raw||'').trim());
+    });
+    if(target && !openSysAdminView.__clickedOnce){
+      openSysAdminView.__clickedOnce = true;
+      // Let the app's own handler run
+      target.click();
+    }
+  }
+
+  /* ---------- Populate Security Center ---------- */
+  function mountSecurityCenter(){
+    const box = q('#admin-security');
+    if(!box || box.__vp_done) return;
+    box.__vp_done = true;
+    box.innerHTML = ''
+      + '<div class="section-title">Security Center</div>'
+      + '<div class="card">'
+      + '  <ul style="margin:0 0 10px 18px;line-height:1.7">'
+      + '    <li><b>Password policy:</b> minimum 12 chars, 1 upper, 1 number, 1 symbol</li>'
+      + '    <li><b>MFA requirement:</b> Admin-level users must enable MFA</li>'
+      + '    <li><b>Session timeout:</b> 30 minutes idle</li>'
+      + '    <li><b>Allowed IP ranges (sample):</b> 203.0.113.0/24; 198.51.100.0/24</li>'
+      + '    <li><b>SSO:</b> Disabled (demo)</li>'
+      + '  </ul>'
+      + '  <div class="muted small">(Monitoring and event feeds are in Audit &amp; Compliance.)</div>'
+      + '</div>';
+  }
+
+  /* ---------- Interface Management ---------- */
+  function card(title, body){
+    return '<div class="card" style="min-width:360px">'
+         + '  <div class="section-title" style="margin:0 0 6px 0">'+esc(title)+'</div>'
+         +      body
+         + '</div>';
+  }
+  function row(label, val){
+    return '<div style="margin:4px 0"><span class="muted">'+esc(label)+':</span> '
+         + '<span style="font-family:ui-monospace,Menlo,Consolas,monospace">'+esc(val)+'</span></div>';
+  }
+  function mountInterface(){
+    const box = q('#admin-interface');
+    if(!box || box.__vp_done) return;
+    box.__vp_done = true;
+    const d=new Date(); const last=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');
+    const c1=card('Testing Lab 1 — API Hook', row('Endpoint','https://api.testinglab1.example/v1/results')+row('API Key','TL1-****-DEMO')+row('Last Sync',last));
+    const c2=card('Testing Lab 2 — API Hook', row('Endpoint','https://api.testinglab2.example/v1/results')+row('API Key','TL2-****-DEMO')+row('Last Sync',last));
+    const c3=card('Organic Certification Body — API Hook', row('Endpoint','https://api.organic-body.example/v1/certs')+row('API Key','OCB-****-DEMO')+row('Last Sync',last));
+    const c4=card('Blockchain — VERI TESTNET', row('Node URL','https://veri-testnet.node.example')+row('Chain ID','veri-testnet-1337')+row('Smart Contract Address','0xDEMOc0n7n7Ac7...')+'<span class="badge ok" style="margin-left:6px">Connected (demo)</span>');
+    box.innerHTML = ''
+      + '<div class="section-title">Interface Management</div>'
+      + '<div class="grid cols-2" style="gap:16px">'+ c1+c2+c3+c4 +'</div>';
+  }
+
+  /* ---------- Seed + Render Audit & Compliance ---------- */
+  function seedAuditSecurity(){
+    const st = state(); if(!st.auditLog) st.auditLog = []; if(!st.securityEvents) st.securityEvents = [];
+    const cid = companyId(); if(!cid) return;
+    const hasAudit = st.auditLog.some(r=>r.company===cid);
+    const hasSec   = st.securityEvents.some(e=>{
+      const u = (st.users||[]).find(x=>x.id===e.userId);
+      return u && u.companyId===cid;
+    });
+    if(!hasAudit){
+      const actor='System Admin (Sys Admin)'; const now=Date.now();
+      for(let i=0;i<18;i++){
+        st.auditLog.push({ ts:new Date(now-i*3600e3).toISOString(), actor, company:cid, action:(i%3?'po_event':'document'), detail:(i%3?'':'upload: label-'+(101+i)+'.pdf') });
+      }
+    }
+    if(!hasSec){
+      const users = usersForCompany(cid); const uid = (users.find(u=>/admin/i.test(u.role||u.name))||users[0]||{}).id || null;
+      const now=Date.now();
+      for(let j=0;j<16;j++){
+        st.securityEvents.push({ ts:new Date(now-j*2700e3).toISOString(), type:'failed_login', reason:(j%2?'wrong_password':'expired_session'), userId: uid });
+      }
+    }
+  }
+
+  function renderAudit(){
+    const box = q('#admin-audit'); if(!box) return;
+    const st = state(); const cid = companyId();
+    const auditRows = (st.auditLog||[]).concat(st.walletAuditLog||[]).filter(r=>r.company===cid).sort((a,b)=>(b.ts||'').localeCompare(a.ts||''));
+    const secRows   = (st.securityEvents||[]).filter(e=>{ const u=(st.users||[]).find(x=>x.id===e.userId); return u && u.companyId===cid; }).sort((a,b)=>(b.ts||'').localeCompare(a.ts||''));
+
+    // Rebuild tables every time (safe, scoped)
+    box.innerHTML = ''
+      + '<div class="grid cols-2">'
+      + '  <div class="card">'
+      + '    <div class="row-between"><div class="section-title">Company Audit Log</div><button id="vpAuditCsv" class="btn">Export CSV</button></div>'
+      + '    <div style="max-height:400px;overflow:auto">'
+      + '      <table class="table small"><thead><tr><th>When</th><th>Actor</th><th>Action</th><th>Detail</th></tr></thead><tbody>'
+      +           auditRows.map(r=>'<tr>'
+      +             + '<td>'+esc(fmt(r.ts))+'</td>'
+      +             + '<td>'+esc(r.actor||r.company||'')+'</td>'
+      +             + '<td>'+esc(r.action||'')+'</td>'
+      +             + '<td>'+esc(r.detail || r.poId || JSON.stringify(r.changes||r.targetUserEmail||'') )+'</td>'
+      +           + '</tr>').join('')
+      + '      </tbody></table>'
+      + '    </div>'
+      + '  </div>'
+      + '  <div class="card">'
+      + '    <div class="row-between"><div class="section-title">Security Events Log</div><button id="vpSecCsv" class="btn">Export CSV</button></div>'
+      + '    <div style="max-height:400px;overflow:auto">'
+      + '      <table class="table small"><thead><tr><th>When</th><th>Type</th><th>Reason</th><th>User</th></tr></thead><tbody>'
+      +           secRows.map(e=>{ const u=(st.users||[]).find(x=>x.id===e.userId)||{}; return '<tr>'
+      +             + '<td>'+esc(fmt(e.ts))+'</td>'
+      +             + '<td>'+esc(e.type||'')+'</td>'
+      +             + '<td>'+esc(e.reason||'')+'</td>'
+      +             + '<td>'+esc(u.email||u.name||u.id||'')+'</td>'
+      +           + '</tr>'; }).join('')
+      + '      </tbody></table>'
+      + '    </div>'
+      + '  </div>'
+      + '</div>';
+
+    // CSV export wiring (scoped)
+    function toCsv(rows, headers){
+      return [headers.join(',')].concat(rows.map(r=>headers.map(h=>{
+        let v = r[h]; if(h==='ts' && v) v = new Date(v).toISOString(); v = (v==null?'':String(v));
+        return /[",\n\r]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v;
+      }).join(','))).join('\n');
+    }
+    const aBtn = q('#vpAuditCsv'); if(aBtn && !aBtn._vp){ aBtn._vp=true; aBtn.addEventListener('click', ()=>{
+      const rows = auditRows.map(r=>({ts:r.ts, actor:r.actor, action:r.action, detail:r.detail||r.poId||''}));
+      const csv = toCsv(rows, ['ts','actor','action','detail']); const url = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); const a=document.createElement('a'); a.href=url; a.download='audit.csv'; a.click(); URL.revokeObjectURL(url);
+    }); }
+    const sBtn = q('#vpSecCsv'); if(sBtn && !sBtn._vp){ sBtn._vp=true; sBtn.addEventListener('click', ()=>{
+      const rows = secRows.map(e=>({ts:e.ts, type:e.type, reason:e.reason, user:( (state().users||[]).find(x=>x.id===e.userId) || {} ).email || ''}));
+      const csv = toCsv(rows, ['ts','type','reason','user']); const url = URL.createObjectURL(new Blob([csv],{type:'text/csv'})); const a=document.createElement('a'); a.href=url; a.download='security.csv'; a.click(); URL.revokeObjectURL(url);
+    }); }
+  }
+
+  function runAll(){
+    if(!roleIsSysAdmin()) return; // absolutely no changes for non-sys-admin roles
+    reduceLeftNav();
+    openSysAdminView();
+    mountSecurityCenter();
+    mountInterface();
+    seedAuditSecurity();
+    renderAudit();
+  }
+
+  window.addEventListener('load', function(){
+    setTimeout(runAll, 0);
+    setTimeout(runAll, 500);
+  });
+  // When clicking tabs inside Sys Admin or re-entering it
+  document.addEventListener('click', function(){
+    setTimeout(runAll, 0);
+  });
+})();
+</script>
 </body>
-</html>
